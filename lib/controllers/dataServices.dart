@@ -25,3 +25,12 @@ Future<dynamic> readDoc(id) async {
       .get()
       .catchError((e) => print("Caught error: $e"));
 }
+
+Future<void> deleteDoc(id) async {
+  const String collectionName = "storage";
+  await FirebaseFirestore.instance
+      .collection(collectionName)
+      .doc(id)
+      .delete()
+      .catchError((e) => print("Caught error: $e"));
+}
