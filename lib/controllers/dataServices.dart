@@ -16,3 +16,12 @@ Future<void> updateData(id, dataToChange) async {
       .then((value) => print("Changed"))
       .catchError((error) => print("Failed to update: $error"));
 }
+
+Future<dynamic> readData(id) async {
+  const String collectionName = "storage";
+  return await FirebaseFirestore.instance
+      .collection(collectionName)
+      .doc(id)
+      .get()
+      .catchError((e) => print("Caught error: $e"));
+}
