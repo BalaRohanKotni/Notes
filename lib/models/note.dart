@@ -16,6 +16,6 @@ class Note {
   });
 
   toStr() {
-    return "ID: $id:\nCreation: $creation, Updation: $updation\n$title\n$body";
+    return "ID: $id Creation: $creation, Updation: $updation\nTitle: $title\nBody: $body";
   }
 }
