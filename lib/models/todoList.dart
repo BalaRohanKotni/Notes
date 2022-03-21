@@ -4,7 +4,7 @@ class TodoList {
   late final DateTime updation;
   late final String type;
   late final String title;
-  late final List<Map> list;
+  late final List<dynamic> list;
 
   TodoList({
     this.id = "",
