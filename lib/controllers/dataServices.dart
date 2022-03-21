@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<void> addDoc(id, data) async {
+Future<void> addDoc(data) async {
   const String collectionName = "storage";
-  await FirebaseFirestore.instance.collection(collectionName).doc(id).set(data);
+  await FirebaseFirestore.instance.collection(collectionName).add(data);
 }
 
 Future<void> updateDoc(id, dataToChange) async {
