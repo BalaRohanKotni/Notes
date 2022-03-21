@@ -14,4 +14,19 @@ class TodoList {
     required this.title,
     required this.list,
   });
+
+  toStr() {
+    var listOfTodoStr = "";
+    for (var item in list) {
+      item['true'] != null
+          ? listOfTodoStr += "true: ${item['true']}\n"
+          : "nope";
+      item['false'] != null
+          ? listOfTodoStr += "false: ${item['false']}\n"
+          : "nope";
+    }
+
+    print(creation.isUtc);
+    return "ID: $id Creation: $creation, Updation: $updation\nTitle: $title\nTODOS:\n$listOfTodoStr";
+  }
 }
