@@ -2,14 +2,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notes/models/todoList.dart';
 
-Future<void> addDoc(data) async {
-  const String collectionName = "storage/users/";
+Future<void> addDoc(uid, data) async {
+  String collectionName = "storage/users/$uid";
   await FirebaseFirestore.instance.collection(collectionName).add(data);
 }
 
-Future<void> updateDoc(id, dataToChange) async {
+Future<void> updateDoc(uid, id, dataToChange) async {
   // nesting objects are also supported: "'a.b.c': 'z'"
-  const String collectionName = "storage/users";
+  String collectionName = "storage/users/$uid";
   await FirebaseFirestore.instance
       .collection(collectionName)
       .doc(id)
@@ -18,8 +18,8 @@ Future<void> updateDoc(id, dataToChange) async {
       .catchError((error) => print("Failed to update: $error"));
 }
 
-Future<TodoList> readDoc(id) async {
-  const String collectionName = "storage/users";
+Future<TodoList> readDoc(uid, id) async {
+  String collectionName = "storage/users/$uid";
   var doc = await FirebaseFirestore.instance
       .collection(collectionName)
       .doc(id)
@@ -39,8 +39,8 @@ Future<TodoList> readDoc(id) async {
   return list;
 }
 
-Future<void> deleteDoc(id) async {
-  const String collectionName = "storage/users";
+Future<void> deleteDoc(uid, id) async {
+  String collectionName = "storage/users/$uid";
   await FirebaseFirestore.instance
       .collection(collectionName)
       .doc(id)
