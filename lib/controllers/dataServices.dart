@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notes/models/todoList.dart';
 
 Future<void> addDoc(uid, data) async {
-  String collectionName = "storage/users/$uid";
+  String collectionName = "storage/users/user/$uid";
   await FirebaseFirestore.instance.collection(collectionName).add(data);
 }
 
 Future<void> updateDoc(uid, id, dataToChange) async {
   // nesting objects are also supported: "'a.b.c': 'z'"
-  String collectionName = "storage/users/$uid";
+  String collectionName = "storage/users/user/$uid";
   await FirebaseFirestore.instance
       .collection(collectionName)
       .doc(id)
@@ -19,7 +19,7 @@ Future<void> updateDoc(uid, id, dataToChange) async {
 }
 
 Future<TodoList> readDoc(uid, id) async {
-  String collectionName = "storage/users/$uid";
+  String collectionName = "storage/users/user/$uid";
   var doc = await FirebaseFirestore.instance
       .collection(collectionName)
       .doc(id)
@@ -40,7 +40,7 @@ Future<TodoList> readDoc(uid, id) async {
 }
 
 Future<void> deleteDoc(uid, id) async {
-  String collectionName = "storage/users/$uid";
+  String collectionName = "storage/users/user/$uid";
   await FirebaseFirestore.instance
       .collection(collectionName)
       .doc(id)
