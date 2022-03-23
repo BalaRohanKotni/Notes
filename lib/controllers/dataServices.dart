@@ -3,6 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notes/models/note.dart';
 import 'package:notes/models/todoList.dart';
 
+Future createUserCollection(uid, email, username) async {
+  // create user collection
+  await FirebaseFirestore.instance
+      .collection('users/')
+      .doc(uid)
+      .set({'email': email, 'username': username});
+}
+
 Future<void> addDoc(uid, data) async {
   await FirebaseFirestore.instance
       .collection('users')
