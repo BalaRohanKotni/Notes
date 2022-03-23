@@ -9,7 +9,7 @@ class AuthService {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       var user = result.user;
-      createUserCollection(user!.uid);
+      createUserCollection(user!.uid, email);
       return user;
     } catch (error) {
       print('Error: ${error.toString()}');
