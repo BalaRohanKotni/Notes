@@ -33,4 +33,13 @@ class AuthService {
       return null;
     }
   }
+
+  Future signOut() async {
+    try {
+      return await _auth.signOut().then((value) => print("Signed out!"));
+    } catch (error) {
+      print(error.toString());
+      return null;
+    }
+  }
 }
