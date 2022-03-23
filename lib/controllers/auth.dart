@@ -14,6 +14,22 @@ class AuthService {
       return user;
     } catch (error) {
       print('Error: ${error.toString()}');
+      if (error.toString() ==
+          '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+        return signInWithEmailAndPassword(email, password);
+      }
+      return null;
+    }
+  }
+
+  Future signInWithEmailAndPassword(String email, String password) async {
+    try {
+      var result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      var user = result.user;
+      return user;
+    } catch (error) {
+      print(error.toString());
       return null;
     }
   }
