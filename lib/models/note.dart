@@ -15,6 +15,17 @@ class Note {
     required this.body,
   });
 
+  toMap() {
+    return {
+      'id': id,
+      'creation': creation,
+      'updation': updation,
+      'type': type,
+      'title': title,
+      'body': body
+    };
+  }
+
   toStr() {
     return "ID: $id Creation: $creation, Updation: $updation\nTitle: $title\nBody: $body";
   }
