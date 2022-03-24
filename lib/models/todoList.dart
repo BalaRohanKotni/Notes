@@ -15,6 +15,17 @@ class TodoList {
     required this.list,
   });
 
+  toMap() {
+    return {
+      'id': id,
+      'creation': creation,
+      'updation': updation,
+      'type': type,
+      'title': title,
+      'list': list,
+    };
+  }
+
   toStr() {
     var listOfTodoStr = "";
     for (var item in list) {
