@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes/components/authCustomTextField.dart';
 import 'package:notes/components/authCustomSubmitButton.dart';
 import 'package:notes/constants.dart';
+import 'package:notes/views/signUpScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -60,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   () {
-                    // TODO: Get values and login
+                    // TODO: Get values and signup
                   },
                   kLoginSignupSubmitButonStartColor,
                   kLoginSignupSubmitButonEndColor,
@@ -79,7 +80,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO: Push to Signup screen
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpScreen()));
                       },
                       style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
