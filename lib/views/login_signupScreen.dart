@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes/constants.dart';
 import 'package:notes/views/loginScreen.dart';
+import 'package:notes/views/signUpScreen.dart';
 import '../components/login_signupChoiceButton.dart';
 
 class LoginSignupScreen extends StatefulWidget {
@@ -36,7 +37,12 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                 height: 5,
               ),
               loginSignupChoiceButton("Sign up", () {
-                // TODO: Push screen to sign up screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SignUpScreen(),
+                  ),
+                );
               }, 'signUp'),
             ],
           ),
