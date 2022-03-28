@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-Container AuthCustomSubmitButtons(Text text) {
+Container AuthCustomSubmitButtons(Text text, Color color) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: 60, vertical: 0),
     decoration: BoxDecoration(
       // color: Color(0xFF23CE6B),
-      color: Color(0xFFA846A0),
+      color: color,
       borderRadius: BorderRadius.all(
         Radius.circular(50),
       ),
