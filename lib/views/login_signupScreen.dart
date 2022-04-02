@@ -21,7 +21,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: kLoginSignupBGColor,
+          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -33,9 +33,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   ),
                 );
               }, 'login'),
-              const SizedBox(
-                height: 5,
-              ),
               loginSignupChoiceButton("Sign up", () {
                 Navigator.push(
                   context,
