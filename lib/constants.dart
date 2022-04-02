@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-const Color appTheme = Color(0xFF2F4368);
-
-const Color kLoginSignupBGColor = Color(0xFF101010);
-
-const Color kLoginSignupTextFeildOutlineColor =
-    Color.fromARGB(255, 134, 42, 134);
-const Color kLoginSignupTextFeildFillColor = Color(0xFF171717);
-
-const Color kLoginSignupSubmitButonStartColor = Color(0xFFac2bcb);
-const Color kLoginSignupSubmitButonEndColor = Color(0xFFd133a6);
+// AppTheme
+const Color kAliceBlue = Color(0xFFE8EEF1);
+const Color kStarCommandBlue = Color(0xFF057DCD);
+const Color kCaledonBLue = Color(0xFF337CA0);
+const Color kCeruleanBlue = Color(0xFF3454D1);
+const Color kSpaceCadet = Color(0xFF3B3561);
