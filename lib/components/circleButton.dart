@@ -15,10 +15,12 @@ class CircleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: CircleAvatar(
+        radius: 25,
         backgroundColor: bgTD,
         child: Icon(
           iconTD,
           color: colorTD,
+          size: 30,
         ),
       ),
       onTap: onTap,
