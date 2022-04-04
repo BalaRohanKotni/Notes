@@ -17,9 +17,8 @@ class TodoList {
 
   toMap() {
     return {
-      'id': id,
-      'creation': creation,
-      'updation': updation,
+      'creation': creation.millisecondsSinceEpoch,
+      'updation': updation.millisecondsSinceEpoch,
       'type': type,
       'title': title,
       'list': list,
