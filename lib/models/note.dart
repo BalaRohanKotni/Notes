@@ -1,8 +1,8 @@
 class Note {
   late final String id;
-  late final DateTime creation;
-  late final DateTime updation;
-  late final String type;
+  late final int creation;
+  late final int updation;
+  static const String type = 'note';
   late final String title;
   late final String body;
 
@@ -10,7 +10,6 @@ class Note {
     this.id = "",
     required this.creation,
     required this.updation,
-    required this.type,
     required this.title,
     required this.body,
   });
