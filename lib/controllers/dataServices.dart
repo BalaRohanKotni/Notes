@@ -42,11 +42,8 @@ Future<dynamic> readDoc(uid, id, dType) async {
 
   if (dType == 'list') {
     TodoList list = TodoList(
-      creation:
-          DateTime.fromMillisecondsSinceEpoch(doc['creation'].seconds * 1000),
-      updation:
-          DateTime.fromMillisecondsSinceEpoch(doc['updation'].seconds * 1000),
-      type: doc['type'],
+      creation: doc['creation'],
+      updation: doc['updation'],
       title: doc['title'],
       list: doc['list'],
     );
@@ -54,11 +51,8 @@ Future<dynamic> readDoc(uid, id, dType) async {
     return list;
   } else {
     Note note = Note(
-        creation:
-            DateTime.fromMillisecondsSinceEpoch(doc['creation'].seconds * 1000),
-        updation:
-            DateTime.fromMillisecondsSinceEpoch(doc['updation'].seconds * 1000),
-        type: doc['type'],
+        creation: doc['creation'],
+        updation: doc['updation'],
         title: doc['title'],
         body: doc['body']);
     return note;
