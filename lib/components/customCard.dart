@@ -30,17 +30,20 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> listItemsTextList = [];
+    List<Widget> doneItems = [];
+    List<Widget> notDoneItems = [];
     if (type == 'todo-list') {
       for (var todo in list) {
         if (todo["0"][0] == false) {
-          listItemsTextList.add(Text(todo['0'][1]));
+          notDoneItems.add(Text(todo['0'][1]));
         } else {
-          listItemsTextList.add(Text(
+          doneItems.add(Text(
             todo['0'][1],
             style: const TextStyle(decoration: TextDecoration.lineThrough),
           ));
         }
       }
+      listItemsTextList = notDoneItems + doneItems;
     }
     return GestureDetector(
       onTap: onTap(),
