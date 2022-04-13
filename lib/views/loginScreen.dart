@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.white,
             appBar: AppBar(
               leading: GestureDetector(
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_rounded,
                   color: kCeruleanBlue,
                   size: 35,
@@ -78,12 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     () async {
-                      // TODO: Get values and signup
                       String email = emailController.text;
                       String pwd = pwdController.text;
 
                       var user = await AuthService()
                           .signInWithEmailAndPassword(email, pwd);
+                      // TODO: Make sure user exists before sending to overview screen
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
