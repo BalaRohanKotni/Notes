@@ -26,10 +26,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 25),
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             appBar: AppBar(
               leading: GestureDetector(
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_rounded,
                   color: kCeruleanBlue,
                   size: 35,
@@ -85,7 +86,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     () async {
-                      // TODO: Get values and login
                       String uName = unameController.text;
                       String email = emailController.text;
                       String pwd = pwdController.text;
