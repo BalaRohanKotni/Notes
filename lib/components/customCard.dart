@@ -8,24 +8,20 @@ class CustomCard extends StatelessWidget {
   DateTime creation;
   DateTime updation;
   String title;
-  String body;
+  dynamic body;
   bool darkMode;
   String type;
-  List<dynamic> list;
 
-  CustomCard(
-      {Key? key,
-      required this.onTap,
-      required this.creation,
-      required this.updation,
-      required this.title,
-      this.body = "",
-      required this.darkMode,
-      required this.type,
-      this.list = const [
-        {'none': 'none'}
-      ]})
-      : super(key: key);
+  CustomCard({
+    Key? key,
+    required this.onTap,
+    required this.creation,
+    required this.updation,
+    required this.title,
+    this.body = "",
+    required this.darkMode,
+    required this.type,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +29,7 @@ class CustomCard extends StatelessWidget {
     List<Widget> doneItems = [];
     List<Widget> notDoneItems = [];
     if (type == 'todo-list') {
-      for (var todo in list) {
+      for (var todo in body) {
         if (todo["0"][0] == false) {
           notDoneItems.add(Text(todo['0'][1]));
         } else {
@@ -96,6 +92,7 @@ class CustomCard extends StatelessWidget {
                           )
                         : Container(
                             child: ListView(
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               children: listItemsTextList,
                             ),
