@@ -90,6 +90,7 @@ class CustomCard extends StatelessWidget {
                         color: Colors.white,
                         child: Expanded(
                           child: ListView(
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             children: listItemsTextList,
                           ),
