@@ -29,7 +29,7 @@ class CustomCard extends StatelessWidget {
     List<Widget> doneItems = [];
     List<Widget> notDoneItems = [];
     if (type == 'todo-list') {
-      for (var todo in body) {
+      for (var todo in body.take(2)) {
         if (todo["0"][0] == false) {
           notDoneItems.add(Text(todo['0'][1]));
         } else {
@@ -39,72 +39,72 @@ class CustomCard extends StatelessWidget {
           ));
         }
       }
+      if (body.length > 2) {
+        doneItems.add(const Text(
+          "...",
+        ));
+      }
       listItemsTextList = notDoneItems + doneItems;
     }
     return GestureDetector(
       onTap: onTap(),
       child: Container(
         height: 140,
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+        decoration: BoxDecoration(
+          color: darkMode ? kSpaceCadet : Colors.white,
+          border: const Border(
+            bottom: BorderSide(width: .75, color: Colors.grey),
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: darkMode ? kSpaceCadet : Colors.white,
-              border: Border.all(color: Colors.grey, width: 0.75),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: kCeruleanBlue,
+                  fontFamily: "SourceSansPro",
+                ),
               ),
             ),
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: kCeruleanBlue,
-                      fontFamily: "SourceSansPro",
-                    ),
-                  ),
+            Expanded(
+                flex: 4,
+                child: (type == 'note')
+                    ? Text(
+                        body,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: kSpaceCadet,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "SourceSansPro",
+                        ),
+                      )
+                    : Container(
+                        color: Colors.white,
+                        child: Expanded(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: listItemsTextList,
+                          ),
+                        ),
+                      )),
+            Expanded(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  " ${creation == updation ? DateFormat("MMMM d y, HH:mm").format((creation.toLocal())) : DateFormat("MMMM d y, HH:mm").format(updation.toLocal())}",
                 ),
-                Expanded(
-                    flex: 4,
-                    child: (type == 'note')
-                        ? Text(
-                            body,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: kSpaceCadet,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "SourceSansPro",
-                            ),
-                          )
-                        : Container(
-                            child: ListView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              children: listItemsTextList,
-                            ),
-                          )),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                      " ${creation == updation ? DateFormat("MMMM d y, HH:mm").format((creation.toLocal())) : DateFormat("MMMM d y, HH:mm").format(updation.toLocal())}"),
-                )
-              ],
-            ),
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
