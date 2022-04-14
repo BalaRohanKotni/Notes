@@ -20,7 +20,7 @@ class CircleButton extends StatelessWidget {
         child: Icon(
           iconTD,
           color: colorTD,
-          size: 30,
+          size: 28,
         ),
       ),
       onTap: onTap,
