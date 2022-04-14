@@ -20,7 +20,7 @@ class TodoList {
       'updation': updation,
       'type': type,
       'title': title,
-      'list': list,
+      'body': list,
     };
   }
 }
