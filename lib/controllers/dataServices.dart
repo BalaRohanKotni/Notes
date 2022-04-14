@@ -15,7 +15,7 @@ Future<void> addDoc(uid, data) async {
   await FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
-      .collection(data['type'])
+      .collection("notes_and_lists")
       .add(data);
 }
 
@@ -24,7 +24,7 @@ Future<void> updateDoc(uid, id, dataToChange, type) async {
   await FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
-      .collection(type)
+      .collection("notes_and_lists")
       .doc(id)
       .update(dataToChange)
       .then((value) => print("Changed"))
@@ -35,7 +35,7 @@ Future<dynamic> readDoc(uid, id, dType) async {
   var doc = await FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
-      .collection(dType)
+      .collection("notes_and_lists")
       .doc(id)
       .get()
       .catchError((e) => print("Caught error: $e"));
@@ -59,11 +59,11 @@ Future<dynamic> readDoc(uid, id, dType) async {
   }
 }
 
-Future<void> deleteDoc(uid, id, type) async {
+Future<void> deleteDoc(uid, id) async {
   await FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
-      .collection(type)
+      .collection("notes_and_lists")
       .doc(id)
       .delete()
       .catchError((e) => print("Caught error: $e"));
