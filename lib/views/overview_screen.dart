@@ -1,5 +1,5 @@
 // ignore: prefer_const_literals_to_create_immutables
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/components/overviewScreenNavBar.dart';
@@ -12,20 +12,17 @@ import '../constants.dart';
 import '../models/todoList.dart';
 
 class OverviewScreen extends StatefulWidget {
-// ignore: prefer_typing_uninitialized_variables
   var user;
-  OverviewScreen({
-    Key? key,
-    @required this.user,
-  }) : super(key: key);
+  var type;
+  var tag;
+  OverviewScreen({Key? key, required this.user, required this.type, this.tag})
+      : super(key: key);
 
   @override
   State<OverviewScreen> createState() => OverviewScreenState();
 }
 
 class OverviewScreenState extends State<OverviewScreen> {
-  late Stream<QuerySnapshot> _noteStream;
-  late Stream<QuerySnapshot> _listStream;
   late Stream<QuerySnapshot> _stream;
   // TODO: implement dark mode
   bool darkMode = false;
@@ -95,7 +92,7 @@ class OverviewScreenState extends State<OverviewScreen> {
           backgroundColor: kCeruleanBlue,
         ),
         key: _key,
-        drawer: OverViewScreenNavBar(),
+        drawer: OverViewScreenNavBar(user: widget.user),
         appBar: AppBar(
           toolbarHeight: 75,
           backgroundColor: Colors.white,
@@ -189,22 +186,32 @@ class OverviewScreenState extends State<OverviewScreen> {
                   return Text("Loading");
                 }
 
+                List<Widget> list = [];
+                for (var document in snapshot.data!.docs) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  var card = CustomCard(
+                      type: data['type'],
+                      darkMode: false,
+                      onTap: () {},
+                      creation:
+                          DateTime.fromMillisecondsSinceEpoch(data['updation']),
+                      updation:
+                          DateTime.fromMillisecondsSinceEpoch(data['updation']),
+                      title: data['title'],
+                      body: data['body']);
+
+                  if (widget.type == "all") {
+                    list.add(card);
+                  } else {
+                    if (widget.type == data['type']) {
+                      list.add(card);
+                    }
+                  }
+                }
+
                 return ListView(
-                  children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
-                    return CustomCard(
-                        type: data['type'],
-                        darkMode: false,
-                        onTap: () {},
-                        creation: DateTime.fromMillisecondsSinceEpoch(
-                            data['updation']),
-                        updation: DateTime.fromMillisecondsSinceEpoch(
-                            data['updation']),
-                        title: data['title'],
-                        body: data['body']);
-                  }).toList(),
+                  children: list,
                 );
               },
             ),
