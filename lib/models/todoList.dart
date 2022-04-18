@@ -2,7 +2,7 @@ class TodoList {
   late final String id;
   late final int creation;
   late final int updation;
-  static const String type = 'todo-list';
+  static const String type = 'list';
   late final String title;
   late final List<dynamic> list;
 
