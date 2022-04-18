@@ -36,22 +36,12 @@ class OverviewScreenState extends State<OverviewScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _noteStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.user.uid)
-        .collection('note')
-        .snapshots();
-
-    _listStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.user.uid)
-        .collection('todo-list')
-        .snapshots();
 
     _stream = FirebaseFirestore.instance
         .collection('users')
         .doc(widget.user.uid)
         .collection('notes_and_lists')
+        .orderBy("updation", descending: true)
         .snapshots();
   }
 
