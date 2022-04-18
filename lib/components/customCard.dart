@@ -28,7 +28,7 @@ class CustomCard extends StatelessWidget {
     List<Widget> listItemsTextList = [];
     List<Widget> doneItems = [];
     List<Widget> notDoneItems = [];
-    if (type == 'todo-list') {
+    if (type == 'list') {
       for (var todo in body.take(2)) {
         if (todo["0"][0] == false) {
           notDoneItems.add(Text(todo['0'][1]));
