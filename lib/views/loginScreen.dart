@@ -87,7 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OverviewScreen(user: user)),
+                              builder: (context) => OverviewScreen(
+                                    user: user,
+                                    type: "all",
+                                  )),
                           (route) => false);
                     },
                     kCeruleanBlue,
