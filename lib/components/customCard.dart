@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../constants.dart';
-
 class CustomCard extends StatelessWidget {
-  Function onTap;
+  void Function() onTap;
   DateTime creation;
   DateTime updation;
   String title;
@@ -46,66 +44,61 @@ class CustomCard extends StatelessWidget {
       }
       listItemsTextList = notDoneItems + doneItems;
     }
-    return GestureDetector(
-      onTap: onTap(),
-      child: Container(
-        height: 140,
-        decoration: BoxDecoration(
-          color: darkMode ? kSpaceCadet : Colors.white,
-          border: const Border(
-            bottom: BorderSide(width: .75, color: Colors.grey),
-          ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: kCeruleanBlue,
-                  fontFamily: "SourceSansPro",
-                ),
-              ),
+
+    return Card(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 140,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: .75, color: Colors.grey),
             ),
-            Expanded(
-                flex: 4,
-                child: (type == 'note')
-                    ? Text(
-                        body,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: kSpaceCadet,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "SourceSansPro",
-                        ),
-                      )
-                    : Container(
-                        color: Colors.white,
-                        child: Expanded(
-                          child: ListView(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            children: listItemsTextList,
-                          ),
-                        ),
-                      )),
-            Expanded(
-              flex: 2,
-              child: Container(
-                alignment: Alignment.bottomRight,
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 2,
                 child: Text(
-                  " ${creation == updation ? DateFormat("MMMM d y, HH:mm").format((creation.toLocal())) : DateFormat("MMMM d y, HH:mm").format(updation.toLocal())}",
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "SourceSansPro",
+                  ),
                 ),
               ),
-            )
-          ],
+              Expanded(
+                  flex: 4,
+                  child: (type == 'note')
+                      ? Text(
+                          body,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "SourceSansPro",
+                          ),
+                        )
+                      : ListView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          children: listItemsTextList,
+                        )),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    " ${creation == updation ? DateFormat("MMMM d y, HH:mm").format((creation.toLocal())) : DateFormat("MMMM d y, HH:mm").format(updation.toLocal())}",
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
