@@ -1,54 +1,47 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
 import 'package:flutter/material.dart';
-
-import '../views/overview_screen.dart';
+import 'drawerTextButton.dart';
 
 class OverViewScreenNavBar extends StatelessWidget {
   var user;
-  OverViewScreenNavBar({Key? key, required this.user}) : super(key: key);
+  bool isDarkMode;
+
+  OverViewScreenNavBar({
+    Key? key,
+    required this.user,
+    required this.isDarkMode,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Drawer(
-      child: ListView(
-        // padding: EdgeInsets.zero,
-        children: [
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OverviewScreen(
-                            user: user,
-                            type: "all",
-                          )));
-            },
-            child: const Text("All"),
+      width: MediaQuery.of(context).size.width / 1.75,
+      child: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Notes',
+                style: TextStyle(
+                  color: theme.secondaryHeaderColor,
+                  fontSize: 34.0,
+                  fontFamily: 'LobsterTwo',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              drawerTextButton(
+                  context: context, text: "All", type: "all", user: user),
+              drawerTextButton(
+                  context: context, text: "Notes", type: "note", user: user),
+              drawerTextButton(
+                  context: context, text: "Lists", type: "list", user: user),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OverviewScreen(
-                            user: user,
-                            type: "note",
-                          )));
-            },
-            child: const Text("Notes"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OverviewScreen(
-                            user: user,
-                            type: "list",
-                          )));
-            },
-            child: const Text("Lists"),
-          ),
-        ],
+        ),
       ),
     );
   }
