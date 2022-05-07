@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes/views/login_signupScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:notes/views/signUpScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +15,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: "Notes",
-      home: LoginSignupScreen(),
+      home: SignUpScreen(),
     );
   }
 }
