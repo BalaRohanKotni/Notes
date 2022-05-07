@@ -24,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 65),
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             appBar: AppBar(
               leading: Container(),
@@ -48,9 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AuthCustomTextFeild("Email", emailController),
+                  authCustomTextFeild("Email", emailController),
                   const SizedBox(height: 20),
-                  AuthCustomTextFeild("Password", pwdController,
+                  authCustomTextFeild("Password", pwdController,
                       type: TextInputType.visiblePassword, obsureText: true),
                   const SizedBox(
                     height: 25,
