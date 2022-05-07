@@ -24,37 +24,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
       color: Colors.white,
       child: SafeArea(
         child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 25),
+          margin: const EdgeInsets.symmetric(vertical: 45),
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             appBar: AppBar(
-              leading: GestureDetector(
-                child: const Icon(
-                  Icons.arrow_back_rounded,
-                  color: kCeruleanBlue,
-                  size: 35,
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              leadingWidth: 45,
+              leading: Container(),
+              leadingWidth: 15,
               elevation: 0,
               iconTheme: const IconThemeData(
                 color: kCeruleanBlue,
               ),
               backgroundColor: Colors.white,
-              title: const Hero(
-                tag: "login",
-                child: Text(
-                  "Sign up",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'LobsterTwo',
-                    fontSize: 40,
-                    color: kCaledonBLue,
-                  ),
+              title: const Text(
+                "Sign up",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'LobsterTwo',
+                  fontSize: 40,
+                  color: kCaledonBLue,
                 ),
               ),
             ),
