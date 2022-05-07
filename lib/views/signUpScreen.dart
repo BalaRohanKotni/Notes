@@ -52,13 +52,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AuthCustomTextFeild("Name", unameController),
+                  authCustomTextFeild("Name", unameController),
                   const SizedBox(
                     height: 25,
                   ),
-                  AuthCustomTextFeild("Email", emailController),
+                  authCustomTextFeild("Email", emailController),
                   const SizedBox(height: 20),
-                  AuthCustomTextFeild("Password", pwdController,
+                  authCustomTextFeild("Password", pwdController,
                       type: TextInputType.visiblePassword, obsureText: true),
                   const SizedBox(
                     height: 25,
