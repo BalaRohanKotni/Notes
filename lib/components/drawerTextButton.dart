@@ -7,6 +7,7 @@ Container drawerTextButton({
   required String text,
   required String type,
   required User user,
+  required String currentType,
 }) {
   return Container(
     margin: const EdgeInsets.only(top: 10, right: 20),
@@ -21,6 +22,11 @@ Container drawerTextButton({
               bottomRight: Radius.circular(50),
             ),
           ),
+        ),
+        backgroundColor: MaterialStateProperty.all(
+          (currentType == type)
+              ? const Color.fromARGB(29, 0, 0, 0)
+              : Colors.white,
         ),
       ),
       child: Text(text),
