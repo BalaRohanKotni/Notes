@@ -1,5 +1,4 @@
-// ignore: prefer_const_literals_to_create_immutables
-// ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables, must_be_immutable
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -119,6 +118,7 @@ class OverviewScreenState extends State<OverviewScreen> {
               width: MediaQuery.of(context).size.width / 1.5,
               child: OverViewScreenNavBar(
                 user: widget.user,
+                type: widget.type,
               ),
               // ),
             ),
