@@ -1,8 +1,10 @@
 // ignore: prefer_const_literals_to_create_immutables
 // ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/components/overviewScreenNavBar.dart';
+import 'package:notes/controllers/appTheme.dart';
 import 'package:notes/controllers/dataServices.dart';
 import 'package:notes/models/note.dart';
 import '../components/circleButton.dart';
@@ -12,10 +14,11 @@ import '../constants.dart';
 import '../models/todoList.dart';
 
 class OverviewScreen extends StatefulWidget {
-  var user;
-  var type;
-  var tag;
-  OverviewScreen({Key? key, required this.user, required this.type, this.tag})
+  User user;
+  String type;
+  String tag;
+  OverviewScreen(
+      {Key? key, required this.user, required this.type, this.tag = ""})
       : super(key: key);
 
   @override
@@ -24,15 +27,20 @@ class OverviewScreen extends StatefulWidget {
 
 class OverviewScreenState extends State<OverviewScreen> {
   late Stream<QuerySnapshot> _stream;
-  // TODO: implement dark mode
-  bool darkMode = false;
+  late AppTheme theme;
 
-  GlobalKey<ScaffoldState> _key = GlobalKey();
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    theme = AppTheme(widget.user.uid);
+
+    theme.addListener(() {
+      setState(() {});
+    });
 
     _stream = FirebaseFirestore.instance
         .collection('users')
@@ -42,182 +50,210 @@ class OverviewScreenState extends State<OverviewScreen> {
         .snapshots();
   }
 
+  bool currentTheme(snapshot) {
+    return (snapshot.data) != null
+        ? (snapshot.data as bool)
+            ? true
+            : false
+        : false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            // TODO: Implement this function to add note or list
+    return FutureBuilder(
+      future: getThemeFirestore(widget.user.uid),
+      builder: (context, snapshot) {
+        return MaterialApp(
+          themeMode:
+              (currentTheme(snapshot)) ? ThemeMode.dark : ThemeMode.light,
+          theme: theme.lightTheme,
+          darkTheme: theme.darkTheme,
+          title: "Notes",
+          home: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                // TODO: Implement this function to add note or list
 
-            Note note = Note(
-              title: "Hello World",
-              body:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper, augue eget mattis venenatis, dolor augue sodales lectus, at sodales enim elit quis mauris. Quisque. ",
-              creation: DateTime.now().millisecondsSinceEpoch,
-              updation: DateTime.now().millisecondsSinceEpoch,
-            );
+                Note note = Note(
+                  title: "Hello World",
+                  body:
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper, augue eget mattis venenatis, dolor augue sodales lectus, at sodales enim elit quis mauris. Quisque. ",
+                  creation: DateTime.now().millisecondsSinceEpoch,
+                  updation: DateTime.now().millisecondsSinceEpoch,
+                );
 
-            TodoList list = TodoList(
-              creation: DateTime.now().millisecondsSinceEpoch,
-              updation: DateTime.now().millisecondsSinceEpoch,
-              title: "TODO",
-              list: [
-                {
-                  "0": [true, "uhmm"]
-                },
-                {
-                  "0": [false, "Hello"]
-                },
-                {
-                  "0": [true, "uhmm"]
-                },
-                {
-                  "0": [false, "gasdf"]
-                },
-                {
-                  "0": [true, "uhmm"]
-                },
-                {
-                  "0": [true, "uhmm"]
-                },
-              ],
-            );
+                TodoList list = TodoList(
+                  creation: DateTime.now().millisecondsSinceEpoch,
+                  updation: DateTime.now().millisecondsSinceEpoch,
+                  title: "TODO",
+                  list: [
+                    {
+                      "0": [true, "uhmm"]
+                    },
+                    {
+                      "0": [false, "Hello"]
+                    },
+                    {
+                      "0": [true, "uhmm"]
+                    },
+                    {
+                      "0": [false, "gasdf"]
+                    },
+                    {
+                      "0": [true, "uhmm"]
+                    },
+                    {
+                      "0": [true, "uhmm"]
+                    },
+                  ],
+                );
 
-            addDoc(widget.user.uid, note.toMap());
-            addDoc(widget.user.uid, list.toMap());
-          },
-          child: Icon(Icons.add),
-          backgroundColor: kCeruleanBlue,
-        ),
-        key: _key,
-        drawer: OverViewScreenNavBar(user: widget.user),
-        appBar: AppBar(
-          toolbarHeight: 75,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          titleSpacing: 0,
-          title: Container(
-            color: Colors.white,
-            child: Container(
-              margin: EdgeInsets.only(right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(0),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                addDoc(widget.user.uid, note.toMap());
+                addDoc(widget.user.uid, list.toMap());
+              },
+              child: Icon(Icons.add),
+              backgroundColor: kCeruleanBlue,
+            ),
+            key: _key,
+            drawer: SizedBox(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child:
+                  // MaterialApp(
+                  //   themeMode: theme.currentTheme,
+                  //   theme: AppTheme.lightTheme,
+                  //   darkTheme: AppTheme.darkTheme,
+                  //   home:
+                  OverViewScreenNavBar(
+                user: widget.user,
+                isDarkMode: true,
+              ),
+              // ),
+            ),
+            appBar: AppBar(
+              toolbarHeight: 75,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              titleSpacing: 0,
+              title: Container(
+                margin: EdgeInsets.only(right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(0),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                          ),
+                          child: SizedBox(
+                            width: 45,
+                            height: 75,
+                            child: Icon(
+                              Icons.menu,
+                              color: kCeruleanBlue,
+                              size: 30,
+                            ),
+                          ),
+                          onPressed: () {
+                            _key.currentState?.openDrawer();
+                          },
                         ),
-                        child: SizedBox(
-                          width: 45,
-                          height: 75,
-                          child: Icon(
-                            Icons.menu,
-                            color: kCeruleanBlue,
-                            size: 30,
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          "Notes",
+                          style: TextStyle(
+                            color: kCaledonBLue,
+                            fontSize: 40.0,
+                            fontFamily: 'LobsterTwo',
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {
-                          _key.currentState?.openDrawer();
-                        },
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      const Text(
-                        "Notes",
-                        style: TextStyle(
-                          color: kCaledonBLue,
-                          fontSize: 40.0,
-                          fontFamily: 'LobsterTwo',
-                          fontWeight: FontWeight.bold,
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CircleButton(
+                          iconTD: (currentTheme(snapshot))
+                              ? Icons.light_mode
+                              : Icons.dark_mode,
+                          colorTD: Colors.white,
+                          onTap: () {
+                            setState(() {
+                              theme.toggleTheme();
+                            });
+                          },
+                          bgTD: kCeruleanBlue,
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      CircleButton(
-                        iconTD: Icons.search,
-                        colorTD: Colors.white,
-                        bgTD: kCeruleanBlue,
-                        onTap: () async {
-                          // TODO: Search PAGE
-                        },
-                      ),
-                      SizedBox(
-                        width: 25,
-                      ),
-                      CircleButton(
-                        iconTD: Icons.settings,
-                        colorTD: Colors.white,
-                        bgTD: kCeruleanBlue,
-                        onTap: () async {
-                          // TODO: SETTINGS PAGE
-                        },
-                      )
-                    ],
-                  )
-                ],
+                        SizedBox(
+                          width: 20,
+                        ),
+                        CircleButton(
+                          iconTD: Icons.search,
+                          colorTD: Colors.white,
+                          bgTD: kCeruleanBlue,
+                          onTap: () {
+                            // TODO: Search PAGE
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            body: SafeArea(
+              child: SizedBox(
+                height: double.infinity,
+                width: double.infinity,
+                child: StreamBuilder(
+                  stream: _stream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading");
+                    }
+
+                    List<Widget> list = [];
+                    for (var document in snapshot.data!.docs) {
+                      Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+                      var card = CustomCard(
+                          type: data['type'],
+                          darkMode: false,
+                          onTap: () {},
+                          creation: DateTime.fromMillisecondsSinceEpoch(
+                              data['updation']),
+                          updation: DateTime.fromMillisecondsSinceEpoch(
+                              data['updation']),
+                          title: data['title'],
+                          body: data['body']);
+
+                      if (widget.type == "all") {
+                        list.add(card);
+                      } else {
+                        if (widget.type == data['type']) {
+                          list.add(card);
+                        }
+                      }
+                    }
+                    return ListView(
+                      children: list,
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        body: SafeArea(
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: darkMode ? kDarkModeBG : Colors.white,
-            child: StreamBuilder(
-              stream: _stream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-
-                List<Widget> list = [];
-                for (var document in snapshot.data!.docs) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
-                  var card = CustomCard(
-                      type: data['type'],
-                      darkMode: false,
-                      onTap: () {},
-                      creation:
-                          DateTime.fromMillisecondsSinceEpoch(data['updation']),
-                      updation:
-                          DateTime.fromMillisecondsSinceEpoch(data['updation']),
-                      title: data['title'],
-                      body: data['body']);
-
-                  if (widget.type == "all") {
-                    list.add(card);
-                  } else {
-                    if (widget.type == data['type']) {
-                      list.add(card);
-                    }
-                  }
-                }
-
-                return ListView(
-                  children: list,
-                );
-              },
-            ),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
