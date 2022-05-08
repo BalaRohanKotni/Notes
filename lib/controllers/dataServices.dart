@@ -8,7 +8,21 @@ Future createUserCollection(uid, email, username) async {
   await FirebaseFirestore.instance
       .collection('users/')
       .doc(uid)
-      .set({'email': email, 'username': username});
+      .set({'email': email, 'username': username, 'isDark': false});
+}
+
+Future<bool> getThemeFirestore(uid) async {
+  var doc =
+      await FirebaseFirestore.instance.collection('users/').doc(uid).get();
+  bool isDark = doc["isDark"];
+  return isDark;
+}
+
+Future updateThemeFirestore(uid, bool isDark) async {
+  await FirebaseFirestore.instance
+      .collection('users/')
+      .doc(uid)
+      .update({"isDark": isDark});
 }
 
 Future<void> addDoc(uid, data) async {
