@@ -4,12 +4,10 @@ import 'drawerTextButton.dart';
 
 class OverViewScreenNavBar extends StatelessWidget {
   var user;
-  bool isDarkMode;
 
   OverViewScreenNavBar({
     Key? key,
     required this.user,
-    required this.isDarkMode,
   }) : super(key: key);
 
   @override

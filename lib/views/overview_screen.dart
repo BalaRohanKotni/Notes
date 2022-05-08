@@ -117,15 +117,8 @@ class OverviewScreenState extends State<OverviewScreen> {
             key: _key,
             drawer: SizedBox(
               width: MediaQuery.of(context).size.width / 1.5,
-              child:
-                  // MaterialApp(
-                  //   themeMode: theme.currentTheme,
-                  //   theme: AppTheme.lightTheme,
-                  //   darkTheme: AppTheme.darkTheme,
-                  //   home:
-                  OverViewScreenNavBar(
+              child: OverViewScreenNavBar(
                 user: widget.user,
-                isDarkMode: true,
               ),
               // ),
             ),
