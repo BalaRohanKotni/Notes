@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/components/authCustomTextField.dart';
 import 'package:notes/components/authCustomSubmitButton.dart';
@@ -17,6 +16,41 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
+
+  void login(
+    BuildContext context,
+  ) async {
+    String email = emailController.text;
+    String pwd = pwdController.text;
+
+    AuthService().signInWithEmailAndPassword(email, pwd).then((user) {
+      if (user != null) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OverviewScreen(
+                      user: user,
+                      type: "all",
+                    )),
+            (route) => false);
+      }
+    }).catchError((e) {
+      // Network error
+      if (e.toString() ==
+          '[firebase_auth/network-request-failed] A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                "Network problem! Try checking your network and try again."),
+            duration: Duration(seconds: 6),
+          ),
+        );
+      } else {
+        // Handle other errors
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,10 +84,16 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  authCustomTextFeild("Email", emailController),
+                  authCustomTextFeild("Email", emailController,
+                      onSubmittedFunction: (str) {}),
                   const SizedBox(height: 20),
                   authCustomTextFeild("Password", pwdController,
-                      type: TextInputType.visiblePassword, obsureText: true),
+                      type: TextInputType.visiblePassword,
+                      obsureText: true, onSubmittedFunction: (str) {
+                    login(
+                      context,
+                    );
+                  }),
                   const SizedBox(
                     height: 25,
                   ),
@@ -68,35 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     () async {
-                      String email = emailController.text;
-                      String pwd = pwdController.text;
-
-                      AuthService()
-                          .signInWithEmailAndPassword(email, pwd)
-                          .then((user) {
-                        if (user!) {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OverviewScreen(
-                                        user: user,
-                                        type: "all",
-                                      )),
-                              (route) => false);
-                        }
-                      }).catchError((e) {
-                        // Network error
-                        if (e.toString() ==
-                            '[firebase_auth/network-request-failed] A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  "Network problem! Try checking your network and try again."),
-                              duration: Duration(seconds: 6),
-                            ),
-                          );
-                        }
-                      });
+                      login(context);
                       // TODO: Make sure user exists before sending to overview screen
                     },
                     kCeruleanBlue,
