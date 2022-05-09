@@ -13,7 +13,6 @@ class AuthService {
       createUserCollection(user!.uid, email, username);
       return user;
     } catch (error) {
-      print('Error: ${error.toString()}');
       if (error.toString() ==
           '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
         return signInWithEmailAndPassword(email, password);
