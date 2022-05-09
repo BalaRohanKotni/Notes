@@ -18,6 +18,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController unameController = TextEditingController();
   late TextEditingController emailController = TextEditingController();
   late TextEditingController pwdController = TextEditingController();
+
+  void signUp(
+    BuildContext context,
+  ) async {
+    String email = emailController.text;
+    String pwd = pwdController.text;
+    String uName = unameController.text;
+
+    AuthService().registerWithEmailAndPassword(uName, email, pwd).then((user) {
+      if (user != null) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OverviewScreen(
+                      user: user,
+                      type: "all",
+                    )),
+            (route) => false);
+      }
+    }).catchError((e) {
+      // Network error
+      if (e.toString() ==
+          '[firebase_auth/network-request-failed] A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                "Network problem! Try checking your network and try again."),
+            duration: Duration(seconds: 6),
+          ),
+        );
+      } else {
+        // Handle other errors
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,14 +88,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  authCustomTextFeild("Name", unameController),
+                  authCustomTextFeild("Name", unameController,
+                      onSubmittedFunction: (str) {}),
                   const SizedBox(
                     height: 25,
                   ),
-                  authCustomTextFeild("Email", emailController),
+                  authCustomTextFeild("Email", emailController,
+                      onSubmittedFunction: (str) {}),
                   const SizedBox(height: 20),
                   authCustomTextFeild("Password", pwdController,
-                      type: TextInputType.visiblePassword, obsureText: true),
+                      type: TextInputType.visiblePassword,
+                      obsureText: true, onSubmittedFunction: (str) {
+                    signUp(context);
+                  }),
                   const SizedBox(
                     height: 25,
                   ),
@@ -74,35 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     () async {
-                      String uName = unameController.text;
-                      String email = emailController.text;
-                      String pwd = pwdController.text;
-                      AuthService()
-                          .registerWithEmailAndPassword(uName, email, pwd)
-                          .then((user) {
-                        if (user!) {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OverviewScreen(
-                                        user: user,
-                                        type: "all",
-                                      )),
-                              (route) => false);
-                        }
-                      }).catchError((e) {
-                        // Network error
-                        if (e.toString() ==
-                            '[firebase_auth/network-request-failed] A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  "Network problem! Try checking your network and try again."),
-                              duration: Duration(seconds: 6),
-                            ),
-                          );
-                        }
-                      });
+                      signUp(context);
                     },
                     kCeruleanBlue,
                     kCeruleanBlue,
