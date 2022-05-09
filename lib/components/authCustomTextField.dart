@@ -8,6 +8,7 @@ Column authCustomTextFeild(
   controller, {
   TextInputType type = TextInputType.text,
   bool obsureText = false,
+  required Function(String str) onSubmittedFunction,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,6 +25,8 @@ Column authCustomTextFeild(
         ),
       ),
       TextField(
+        onSubmitted: onSubmittedFunction,
+        textInputAction: TextInputAction.done,
         cursorColor: kSpaceCadet,
         controller: controller,
         style: TextStyle(
