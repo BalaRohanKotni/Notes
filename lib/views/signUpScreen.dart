@@ -77,16 +77,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       String uName = unameController.text;
                       String email = emailController.text;
                       String pwd = pwdController.text;
-                      var user = await AuthService()
-                          .registerWithEmailAndPassword(uName, email, pwd);
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OverviewScreen(
-                                    user: user,
-                                    type: "all",
-                                  )),
-                          (route) => false);
+                      AuthService()
+                          .registerWithEmailAndPassword(uName, email, pwd)
+                          .then((user) {
+                        if (user!) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OverviewScreen(
+                                        user: user,
+                                        type: "all",
+                                      )),
+                              (route) => false);
+                        }
+                      }).catchError((e) {
+                        // Network error
+                        if (e.toString() ==
+                            '[firebase_auth/network-request-failed] A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  "Network problem! Try checking your network and try again."),
+                              duration: Duration(seconds: 6),
+                            ),
+                          );
+                        }
+                      });
                     },
                     kCeruleanBlue,
                     kCeruleanBlue,
