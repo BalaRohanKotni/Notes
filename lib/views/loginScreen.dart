@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/components/authCustomTextField.dart';
 import 'package:notes/components/authCustomSubmitButton.dart';
@@ -70,17 +71,33 @@ class _LoginScreenState extends State<LoginScreen> {
                       String email = emailController.text;
                       String pwd = pwdController.text;
 
-                      var user = await AuthService()
-                          .signInWithEmailAndPassword(email, pwd);
+                      AuthService()
+                          .signInWithEmailAndPassword(email, pwd)
+                          .then((user) {
+                        if (user!) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OverviewScreen(
+                                        user: user,
+                                        type: "all",
+                                      )),
+                              (route) => false);
+                        }
+                      }).catchError((e) {
+                        // Network error
+                        if (e.toString() ==
+                            '[firebase_auth/network-request-failed] A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  "Network problem! Try checking your network and try again."),
+                              duration: Duration(seconds: 6),
+                            ),
+                          );
+                        }
+                      });
                       // TODO: Make sure user exists before sending to overview screen
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OverviewScreen(
-                                    user: user,
-                                    type: "all",
-                                  )),
-                          (route) => false);
                     },
                     kCeruleanBlue,
                     kCeruleanBlue,
