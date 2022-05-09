@@ -18,7 +18,7 @@ class AuthService {
           '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
         return signInWithEmailAndPassword(email, password);
       }
-      return null;
+      rethrow;
     }
   }
 
@@ -29,8 +29,7 @@ class AuthService {
       var user = result.user;
       return user;
     } catch (error) {
-      print(error.toString());
-      return null;
+      rethrow;
     }
   }
 
@@ -38,8 +37,7 @@ class AuthService {
     try {
       return await _auth.signOut().then((value) => print("Signed out!"));
     } catch (error) {
-      print(error.toString());
-      return null;
+      rethrow;
     }
   }
 }
