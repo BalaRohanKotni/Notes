@@ -53,6 +53,16 @@ class _LoginScreenState extends State<LoginScreen> {
             duration: Duration(seconds: 6),
           ),
         );
+      } else {
+        if (e.toString() ==
+            '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Wrong Password! Try again."),
+              duration: Duration(seconds: 6),
+            ),
+          );
+        }
       }
       // Handle other errors
     });
