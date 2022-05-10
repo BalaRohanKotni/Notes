@@ -45,9 +45,16 @@ class _LoginScreenState extends State<LoginScreen> {
             duration: Duration(seconds: 6),
           ),
         );
-      } else {
-        // Handle other errors
+      } else if (e.toString() ==
+          '[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Account does not exist! Try signing up."),
+            duration: Duration(seconds: 6),
+          ),
+        );
       }
+      // Handle other errors
     });
   }
 
