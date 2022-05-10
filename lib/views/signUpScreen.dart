@@ -48,7 +48,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             duration: Duration(seconds: 6),
           ),
         );
-      } else {
+      } else if (e.toString() ==
+          '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Account already exists! Try logging in."),
+            duration: Duration(seconds: 6),
+          ),
+        );
         // Handle other errors
       }
     });
