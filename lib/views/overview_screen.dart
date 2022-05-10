@@ -6,6 +6,7 @@ import 'package:notes/components/overviewScreenNavBar.dart';
 import 'package:notes/controllers/appTheme.dart';
 import 'package:notes/controllers/dataServices.dart';
 import 'package:notes/models/note.dart';
+import 'package:notes/views/noteScreen.dart';
 import '../components/circleButton.dart';
 import '../components/customCard.dart';
 import '../constants.dart';
@@ -73,42 +74,49 @@ class OverviewScreenState extends State<OverviewScreen> {
               onPressed: () async {
                 // TODO: Implement this function to add note or list
 
-                Note note = Note(
-                  title: "Hello World",
-                  body:
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper, augue eget mattis venenatis, dolor augue sodales lectus, at sodales enim elit quis mauris. Quisque. ",
-                  creation: DateTime.now().millisecondsSinceEpoch,
-                  updation: DateTime.now().millisecondsSinceEpoch,
-                );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NoteScreen(
+                              user: widget.user,
+                            )));
 
-                TodoList list = TodoList(
-                  creation: DateTime.now().millisecondsSinceEpoch,
-                  updation: DateTime.now().millisecondsSinceEpoch,
-                  title: "TODO",
-                  list: [
-                    {
-                      "0": [true, "uhmm"]
-                    },
-                    {
-                      "0": [false, "Hello"]
-                    },
-                    {
-                      "0": [true, "uhmm"]
-                    },
-                    {
-                      "0": [false, "gasdf"]
-                    },
-                    {
-                      "0": [true, "uhmm"]
-                    },
-                    {
-                      "0": [true, "uhmm"]
-                    },
-                  ],
-                );
+                // Note note = Note(
+                //   title: "Hello World",
+                //   body:
+                //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ullamcorper, augue eget mattis venenatis, dolor augue sodales lectus, at sodales enim elit quis mauris. Quisque. ",
+                //   creation: DateTime.now().millisecondsSinceEpoch,
+                //   updation: DateTime.now().millisecondsSinceEpoch,
+                // );
 
-                addDoc(widget.user.uid, note.toMap());
-                addDoc(widget.user.uid, list.toMap());
+                // TodoList list = TodoList(
+                //   creation: DateTime.now().millisecondsSinceEpoch,
+                //   updation: DateTime.now().millisecondsSinceEpoch,
+                //   title: "TODO",
+                //   list: [
+                //     {
+                //       "0": [true, "uhmm"]
+                //     },
+                //     {
+                //       "0": [false, "Hello"]
+                //     },
+                //     {
+                //       "0": [true, "uhmm"]
+                //     },
+                //     {
+                //       "0": [false, "gasdf"]
+                //     },
+                //     {
+                //       "0": [true, "uhmm"]
+                //     },
+                //     {
+                //       "0": [true, "uhmm"]
+                //     },
+                //   ],
+                // );
+
+                // addDoc(widget.user.uid, note.toMap());
+                // addDoc(widget.user.uid, list.toMap());
               },
               child: Icon(Icons.add),
               backgroundColor: kCeruleanBlue,
