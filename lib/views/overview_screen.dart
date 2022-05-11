@@ -79,6 +79,9 @@ class OverviewScreenState extends State<OverviewScreen> {
                     MaterialPageRoute(
                         builder: (context) => NoteScreen(
                               user: widget.user,
+                              themeMode: (currentTheme(snapshot))
+                                  ? ThemeMode.dark
+                                  : ThemeMode.light,
                             )));
 
                 // Note note = Note(
