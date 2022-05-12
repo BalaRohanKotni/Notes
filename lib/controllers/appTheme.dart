@@ -54,9 +54,8 @@ class AppTheme with ChangeNotifier {
         backgroundColor: Color(0xFF1A1A1A),
       ),
       textTheme: const TextTheme(
-        bodyText2: TextStyle(
-          color: Colors.white,
-        ),
+        subtitle1: TextStyle(color: Colors.white, fontFamily: "SourceSansPro"),
+        bodyText2: TextStyle(color: Colors.white, fontFamily: "SourceSansPro"),
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
