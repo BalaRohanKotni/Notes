@@ -29,24 +29,6 @@ class NoteScreenState extends State<NoteScreen> {
       r'# (.*)': const TextStyle(fontSize: 32 + 8),
       r'\*\*(.*?)\*\*': const TextStyle(fontWeight: FontWeight.bold),
       r'\*(.*?)\*': const TextStyle(fontStyle: FontStyle.italic),
-      // r"@.\w+": TextStyle(color: Colors.blue, shadows: kElevationToShadow[2]),
-      // 'red': const TextStyle(
-      //     color: Colors.red, decoration: TextDecoration.underline),
-      // 'green': TextStyle(color: Colors.green, shadows: kElevationToShadow[2]),
-      // 'purple': TextStyle(color: Colors.purple, shadows: kElevationToShadow[2]),
-      // r'_(.*?)\_': TextStyle(
-      //     fontStyle: FontStyle.italic, shadows: kElevationToShadow[2]),
-      // '~(.*?)~': TextStyle(
-      //     decoration: TextDecoration.lineThrough,
-      //     shadows: kElevationToShadow[2]),
-      // r'\*(.*?)\*': const TextStyle(
-      //   fontWeight: FontWeight.bold,
-      //   // shadows: kElevationToShadow[2],
-      // ),
-      // r'```(.*?)```': TextStyle(
-      //     color: Colors.yellow,
-      //     fontFeatures: const [FontFeature.tabularFigures()],
-      //     shadows: kElevationToShadow[2]),
     },
   );
 
