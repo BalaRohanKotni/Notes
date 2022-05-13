@@ -40,24 +40,41 @@ class TextFieldFormatter extends TextEditingController {
                   if (element.group(0) == match[0]) {
                     patternMatched = e;
                     ret = true;
-                    return;
                   }
                 });
                 return ret;
               },
             )];
 
-        if (patternMatched == r"_(.*?)\_") {
-          formatText = match[0]!.replaceAll("_", " ");
-        } else if (patternMatched == r'\*(.*?)\*') {
-          formatText = match[0]!.replaceAll("*", " ");
-        } else if (patternMatched == "~(.*?)~") {
-          formatText = match[0]!.replaceAll("~", " ");
-        } else if (patternMatched == r'```(.*?)```') {
-          formatText = match[0]!.replaceAll("```", "   ");
-        } else {
-          formatText = match[0];
-        }
+        // if (patternMatched == r"_(.*?)\_") {
+        //   formatText = match[0]!.replaceAll("_", " ");
+        // } else if (patternMatched == r'\*(.*?)\*') {
+        //   formatText = match[0]!.replaceAll("*", " ");
+        // } else if (patternMatched == "~(.*?)~") {
+        //   formatText = match[0]!.replaceAll("~", " ");
+        // } else if (patternMatched == r'```(.*?)```') {
+        //   formatText = match[0]!.replaceAll("```", "   ");
+        // } else
+        // if (patternMatched == r'# (.*)') {
+        // formatText = match[0]!.replaceAll("#", " ");
+        // print([formatText]);
+        // }
+        // else {
+        //   formatText = match[0];
+        // }
+
+        map.forEach((key, value) {
+          if (patternMatched == key) {
+            String command = key;
+            command = command.replaceAll("\\", "");
+            int posFirstParanthesis = command.indexOf('(');
+            command = command.substring(0, posFirstParanthesis);
+            print([key, command]);
+            formatText = match[0]!.replaceAll(command, " ");
+            // print([key[0], formatText]);
+          }
+        });
+
         children.add(TextSpan(
           text: formatText,
           style: style?.merge(myStyle),
