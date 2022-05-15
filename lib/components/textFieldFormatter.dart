@@ -46,23 +46,6 @@ class TextFieldFormatter extends TextEditingController {
               },
             )];
 
-        // if (patternMatched == r"_(.*?)\_") {
-        //   formatText = match[0]!.replaceAll("_", " ");
-        // } else if (patternMatched == r'\*(.*?)\*') {
-        //   formatText = match[0]!.replaceAll("*", " ");
-        // } else if (patternMatched == "~(.*?)~") {
-        //   formatText = match[0]!.replaceAll("~", " ");
-        // } else if (patternMatched == r'```(.*?)```') {
-        //   formatText = match[0]!.replaceAll("```", "   ");
-        // } else
-        // if (patternMatched == r'# (.*)') {
-        // formatText = match[0]!.replaceAll("#", " ");
-        // print([formatText]);
-        // }
-        // else {
-        //   formatText = match[0];
-        // }
-
         map.forEach((key, value) {
           if (patternMatched == key) {
             String command = key;
