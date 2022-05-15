@@ -57,6 +57,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         );
         // Handle other errors
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                "Sorry! Not able to process your request this time, try again later. Thank you."),
+            duration: Duration(seconds: 6),
+          ),
+        );
+        // TODO: Try to send dev the error code, to be worked on for updates
       }
     });
   }
