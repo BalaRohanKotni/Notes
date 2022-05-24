@@ -11,14 +11,6 @@ class CustomTextFieldController extends TextEditingController {
 
     final boldRegex = RegExp(r'\*(.*?)\*');
 
-    // final match = boldRegex.firstMatch(text);
-    // String? matchedText = match?.group(0);
-
-    // if (matchedText != null) {
-    //   text = text.replaceAll("*", " ");
-    // }
-    print(this.selection.base.offset);
-
     text.splitMapJoin(
       boldRegex,
       onMatch: (Match m) {
@@ -27,7 +19,6 @@ class CustomTextFieldController extends TextEditingController {
 
         children.add(
           TextSpan(
-            // text: matchText,
             children: [
               (m[0]!.length + text.indexOf(m[0]!) >= selection.base.offset &&
                       selection.base.offset >= text.indexOf(m[0]!))
