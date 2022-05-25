@@ -21,10 +21,6 @@ class CustomTextFieldController extends TextEditingController {
         }).join('|'),
         multiLine: true);
 
-    // styleMaps.forEach((key, value) {
-    //   pattern = RegExp(pattern.toString() + "|" + value[0]);
-    // });
-
     text.splitMapJoin(
       pattern,
       onMatch: (Match m) {
@@ -56,9 +52,6 @@ class CustomTextFieldController extends TextEditingController {
       },
     );
 
-    return TextSpan(
-        // text: text,
-        // style: const TextStyle(color: Colors.red),
-        children: children);
+    return TextSpan(children: children);
   }
 }
