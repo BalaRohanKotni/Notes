@@ -68,7 +68,7 @@ class NoteScreenState extends State<NoteScreen> {
                 // ),
                 TextField(
                   controller: testController,
-                  maxLines: 5,
+                  maxLines: 10,
                   style: TextStyle(fontSize: 24),
                 )
               ],
