@@ -14,24 +14,19 @@ class CustomTextFieldController extends TextEditingController {
     text.splitMapJoin(
       boldRegex,
       onMatch: (Match m) {
-        // String matchText = m[0]!.replaceAll("*", '');
-        String matchText = m[0]!.replaceAll("*", '‎');
-
         children.add(
           TextSpan(
             children: [
               (m[0]!.length + text.indexOf(m[0]!) >= selection.base.offset &&
                       selection.base.offset >= text.indexOf(m[0]!))
-                  ? TextSpan(text: "*", children: [
-                      TextSpan(text: matchText),
-                      const TextSpan(text: "*")
-                    ])
-                  : TextSpan(text: matchText),
+                  ? TextSpan(text: m[0])
+                  : TextSpan(
+                      text: "‎" + m[0]!.substring(1, m[0]!.length - 1) + "‎"),
             ],
             style: const TextStyle(
               fontSize: 24,
               fontStyle: FontStyle.italic,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
         );
