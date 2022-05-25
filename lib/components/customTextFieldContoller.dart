@@ -9,26 +9,44 @@ class CustomTextFieldController extends TextEditingController {
   }) {
     List<InlineSpan> children = [];
 
-    final italicRegex = RegExp(r'\*(.*?)\*');
-    const italicDelimeter = "*";
+    Map styleMaps = {
+      "#": [r'#(.*)', style?.copyWith(fontSize: 32 + 8)],
+      "**": [r'\*\*(.+?)\*\*', style?.copyWith(fontWeight: FontWeight.bold)],
+      "*": [r'\*(.+?)\*', style?.copyWith(fontStyle: FontStyle.italic)],
+    };
+
+    Pattern pattern = RegExp(
+        styleMaps.keys.map((key) {
+          return styleMaps[key][0];
+        }).join('|'),
+        multiLine: true);
+
+    // styleMaps.forEach((key, value) {
+    //   pattern = RegExp(pattern.toString() + "|" + value[0]);
+    // });
 
     text.splitMapJoin(
-      italicRegex,
+      pattern,
       onMatch: (Match m) {
+        TextStyle customStyle = const TextStyle();
+        String delimeter = "";
+
+        for (String key in styleMaps.keys) {
+          var styleMap = styleMaps[key];
+          if (RegExp(styleMap[0]).hasMatch(m[0]!)) {
+            customStyle = styleMap[1];
+            delimeter = key;
+            break;
+          }
+        }
         children.add(
-          TextSpan(
-            children: [
-              (m[0]!.length + text.indexOf(m[0]!) >= selection.base.offset &&
-                      selection.base.offset >= text.indexOf(m[0]!))
-                  ? TextSpan(text: m[0])
-                  : TextSpan(text: m[0]!.replaceAll(italicDelimeter, "‎")),
-            ],
-            style: const TextStyle(
-              fontSize: 24,
-              fontStyle: FontStyle.italic,
-              color: Colors.black,
-            ),
-          ),
+          TextSpan(children: [
+            (m[0]!.length + text.indexOf(m[0]!) >= selection.base.offset &&
+                    selection.base.offset >= text.indexOf(m[0]!))
+                ? TextSpan(text: m[0])
+                : TextSpan(
+                    text: m[0]!.replaceAll(delimeter, "‎" * delimeter.length)),
+          ], style: customStyle),
         );
         return "";
       },
