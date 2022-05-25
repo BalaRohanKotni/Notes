@@ -20,8 +20,7 @@ class CustomTextFieldController extends TextEditingController {
               (m[0]!.length + text.indexOf(m[0]!) >= selection.base.offset &&
                       selection.base.offset >= text.indexOf(m[0]!))
                   ? TextSpan(text: m[0])
-                  : TextSpan(
-                      text: "‎" + m[0]!.substring(1, m[0]!.length - 1) + "‎"),
+                  : TextSpan(text: m[0]!.replaceAll("*", "‎")),
             ],
             style: const TextStyle(
               fontSize: 24,
