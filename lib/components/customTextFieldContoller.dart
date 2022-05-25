@@ -9,10 +9,11 @@ class CustomTextFieldController extends TextEditingController {
   }) {
     List<InlineSpan> children = [];
 
-    final boldRegex = RegExp(r'\*(.*?)\*');
+    final italicRegex = RegExp(r'\*(.*?)\*');
+    const italicDelimeter = "*";
 
     text.splitMapJoin(
-      boldRegex,
+      italicRegex,
       onMatch: (Match m) {
         children.add(
           TextSpan(
@@ -20,7 +21,7 @@ class CustomTextFieldController extends TextEditingController {
               (m[0]!.length + text.indexOf(m[0]!) >= selection.base.offset &&
                       selection.base.offset >= text.indexOf(m[0]!))
                   ? TextSpan(text: m[0])
-                  : TextSpan(text: m[0]!.replaceAll("*", "‎")),
+                  : TextSpan(text: m[0]!.replaceAll(italicDelimeter, "‎")),
             ],
             style: const TextStyle(
               fontSize: 24,
