@@ -51,22 +51,13 @@ class NoteScreenState extends State<NoteScreen> {
             margin: const EdgeInsets.all(8),
             child: Column(
               children: [
-                // Expanded(
-                //   child: TextField(
-                //     maxLines: 99999,
-                //     onChanged: (text) {
-                //       final val = TextSelection.collapsed(
-                //           offset: _controller.text.length);
-                //       _controller.selection = val;
-                //     },
-                //     style: const TextStyle(fontSize: 16),
-                //     controller: _controller,
-                //   ),
-                // ),
-                TextField(
-                  controller: testController,
-                  maxLines: 10,
-                  style: const TextStyle(fontSize: 24),
+                Expanded(
+                  child: TextField(
+                    controller: testController,
+                    maxLines: 99999,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.w500),
+                  ),
                 )
               ],
             ),
