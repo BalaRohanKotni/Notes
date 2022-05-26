@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/components/customTextFieldContoller.dart';
@@ -35,7 +33,6 @@ class NoteScreenState extends State<NoteScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     theme = AppTheme(widget.user.uid);
     // SystemChannels.textInput.invokeListMethod("TextInput.show");
@@ -69,7 +66,7 @@ class NoteScreenState extends State<NoteScreen> {
                 TextField(
                   controller: testController,
                   maxLines: 10,
-                  style: TextStyle(fontSize: 24),
+                  style: const TextStyle(fontSize: 24),
                 )
               ],
             ),
