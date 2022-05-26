@@ -70,6 +70,10 @@ flutter:
       fonts:
         - asset: fonts/LobsterTwo.ttf
 
+    - family: SpaceMono
+      fonts:
+        - asset: fonts/SpaceMono.ttf
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
