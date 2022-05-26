@@ -12,7 +12,7 @@ class CustomTextFieldController extends TextEditingController {
     Map styleMaps = {
       "#": [
         r'#(.*)',
-        style?.copyWith(fontSize: 32 + 8, fontWeight: FontWeight.bold)
+        style?.copyWith(fontSize: 36, fontWeight: FontWeight.bold)
       ],
       "`": [r'`(.+?)`', style?.copyWith(fontFamily: "SpaceMono")],
       "***": [
