@@ -10,11 +10,19 @@ class CustomTextFieldController extends TextEditingController {
     List<InlineSpan> children = [];
 
     Map styleMaps = {
+      "##": [
+        r'##(.*)',
+        style?.copyWith(fontSize: 24, fontWeight: FontWeight.bold)
+      ],
       "#": [
         r'#(.*)',
         style?.copyWith(fontSize: 36, fontWeight: FontWeight.bold)
       ],
       "`": [r'`(.+?)`', style?.copyWith(fontFamily: "SpaceMono")],
+      "~": [
+        r'~(.+?)~',
+        style?.copyWith(decoration: TextDecoration.lineThrough)
+      ],
       "***": [
         r'\*\*\*(.+?)\*\*\*',
         style?.copyWith(
