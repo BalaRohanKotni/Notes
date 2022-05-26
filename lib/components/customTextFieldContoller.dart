@@ -14,6 +14,7 @@ class CustomTextFieldController extends TextEditingController {
         r'#(.*)',
         style?.copyWith(fontSize: 32 + 8, fontWeight: FontWeight.bold)
       ],
+      "`": [r'`(.+?)`', style?.copyWith(fontFamily: "SpaceMono")],
       "***": [
         r'\*\*\*(.+?)\*\*\*',
         style?.copyWith(
@@ -52,6 +53,8 @@ class CustomTextFieldController extends TextEditingController {
                     text: m[0]!.replaceAll(delimeter, "‎" * delimeter.length)),
           ], style: customStyle),
         );
+
+        print(customStyle.fontFamily);
         return "";
       },
       onNonMatch: (str) {
