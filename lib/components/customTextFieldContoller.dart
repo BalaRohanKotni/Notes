@@ -54,7 +54,6 @@ class CustomTextFieldController extends TextEditingController {
           ], style: customStyle),
         );
 
-        print(customStyle.fontFamily);
         return "";
       },
       onNonMatch: (str) {
