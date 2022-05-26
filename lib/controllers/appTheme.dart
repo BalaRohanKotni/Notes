@@ -15,6 +15,7 @@ class AppTheme with ChangeNotifier {
 
   ThemeData get lightTheme {
     return ThemeData(
+      fontFamily: "SourceSansPro",
       secondaryHeaderColor: kCaledonBLue,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
