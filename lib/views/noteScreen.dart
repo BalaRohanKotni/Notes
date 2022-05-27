@@ -100,12 +100,12 @@ class NoteScreenState extends State<NoteScreen> {
                     border: InputBorder.none,
                     hintText: "Untitled",
                     hintStyle: TextStyle(
-                        fontSize: 40,
+                        fontSize: 36,
                         color: (widget.themeMode == ThemeMode.dark)
                             ? const Color(0xFF373737)
                             : const Color(0xFFe1e1e0)),
                   ),
-                  style: const TextStyle(fontSize: 38),
+                  style: const TextStyle(fontSize: 36),
                 ),
                 Expanded(
                   child: ReorderableListView(
