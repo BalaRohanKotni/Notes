@@ -11,7 +11,7 @@ Expanded textBlock(CustomTextFieldController testController, widget) {
           controller: testController,
           maxLines: null,
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
           decoration: const InputDecoration(
