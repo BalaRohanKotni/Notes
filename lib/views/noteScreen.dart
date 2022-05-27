@@ -47,7 +47,9 @@ class NoteScreenState extends State<NoteScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(titleEditingController.text),
+              Text((titleEditingController.text.isEmpty)
+                  ? "Untitled"
+                  : titleEditingController.text),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
