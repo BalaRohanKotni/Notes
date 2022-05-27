@@ -16,6 +16,9 @@ class NoteScreen extends StatefulWidget {
 class NoteScreenState extends State<NoteScreen> {
   late AppTheme theme;
 
+  TextEditingController titleEditingController = TextEditingController();
+  CustomTextFieldController testController = CustomTextFieldController();
+
   // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
   // r'##### (.*)': const TextStyle(fontSize: 13.28 + 8),
   // r'#### (.*)': const TextStyle(fontSize: 16 + 8),
@@ -34,29 +37,67 @@ class NoteScreenState extends State<NoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CustomTextFieldController testController = CustomTextFieldController();
     return MaterialApp(
       themeMode: widget.themeMode,
       theme: theme.lightTheme,
       darkTheme: theme.darkTheme,
       home: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(titleEditingController.text),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  Icon(
+                    Icons.text_fields,
+                    size: 30,
+                  ),
+                  Icon(
+                    Icons.text_format,
+                    size: 30,
+                  ),
+                  Icon(
+                    Icons.list_alt,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
         body: SafeArea(
           child: Container(
             margin: const EdgeInsets.all(8),
             child: Column(
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: testController,
-                    maxLines: null,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.w500),
+                TextField(
+                  controller: titleEditingController,
+                  onChanged: (context) {
+                    setState(() {});
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "Untitled",
+                    hintStyle: TextStyle(fontSize: 42),
                   ),
-                )
+                  style: const TextStyle(fontSize: 42),
+                ),
+                textBlock(testController)
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Expanded textBlock(CustomTextFieldController testController) {
+    return Expanded(
+      child: TextField(
+        controller: testController,
+        maxLines: null,
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
       ),
     );
   }
