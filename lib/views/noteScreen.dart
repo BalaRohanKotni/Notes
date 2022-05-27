@@ -48,7 +48,7 @@ class NoteScreenState extends State<NoteScreen> {
                 Expanded(
                   child: TextField(
                     controller: testController,
-                    maxLines: 99999,
+                    maxLines: null,
                     style: const TextStyle(
                         fontSize: 24, fontWeight: FontWeight.w500),
                   ),
