@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:notes/components/customTextFieldContoller.dart';
 import 'package:notes/controllers/appTheme.dart';
 
-import '../components/textFieldFormatter.dart';
-
 class NoteScreen extends StatefulWidget {
   final User user;
   final ThemeMode themeMode;
@@ -18,18 +16,14 @@ class NoteScreen extends StatefulWidget {
 class NoteScreenState extends State<NoteScreen> {
   late AppTheme theme;
 
-  final TextEditingController _controller = TextFieldFormatter(
-    {
-      // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
-      // r'##### (.*)': const TextStyle(fontSize: 13.28 + 8),
-      // r'#### (.*)': const TextStyle(fontSize: 16 + 8),
-      // r'### (.*)': const TextStyle(fontSize: 18.72 + 8),
-      // r'## (.*)': const TextStyle(fontSize: 24 + 8),
-      // r'# (.*)': const TextStyle(fontSize: 32 + 8),
-      r'\*\*(.*?)\*\*': const TextStyle(fontWeight: FontWeight.bold),
-      r'\*(.*?)\*': const TextStyle(fontStyle: FontStyle.italic),
-    },
-  );
+  // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
+  // r'##### (.*)': const TextStyle(fontSize: 13.28 + 8),
+  // r'#### (.*)': const TextStyle(fontSize: 16 + 8),
+  // r'### (.*)': const TextStyle(fontSize: 18.72 + 8),
+  // r'## (.*)': const TextStyle(fontSize: 24 + 8),
+  // r'# (.*)': const TextStyle(fontSize: 32 + 8),
+  // r'\*\*(.*?)\*\*': const TextStyle(fontWeight: FontWeight.bold),
+  // r'\*(.*?)\*': const TextStyle(fontStyle: FontStyle.italic),
 
   @override
   void initState() {
