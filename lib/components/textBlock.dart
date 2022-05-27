@@ -5,8 +5,8 @@ Expanded textBlock(CustomTextFieldController testController, widget) {
   return Expanded(
     child: Container(
       color: (widget.themeMode == ThemeMode.dark)
-          ? const Color(0xFF373737)
-          : const Color(0xFFe1e1e0),
+          ? Color.fromARGB(255, 37, 37, 37)
+          : Color.fromARGB(255, 239, 239, 239),
       child: TextField(
           controller: testController,
           maxLines: null,
