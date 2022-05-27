@@ -20,6 +20,8 @@ class NoteScreenState extends State<NoteScreen> {
   TextEditingController titleEditingController = TextEditingController();
   CustomTextFieldController testController = CustomTextFieldController();
 
+  List<Widget> textBlocks = [];
+
   // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
   // r'##### (.*)': const TextStyle(fontSize: 13.28 + 8),
   // r'#### (.*)': const TextStyle(fontSize: 16 + 8),
@@ -52,18 +54,32 @@ class NoteScreenState extends State<NoteScreen> {
                   : titleEditingController.text),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  Icon(
-                    Icons.text_fields,
-                    size: 30,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        textBlocks.add(
+                            textBlock(CustomTextFieldController(), widget));
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.text_fields,
+                      size: 30,
+                    ),
                   ),
-                  Icon(
-                    Icons.text_format,
-                    size: 30,
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.text_format,
+                      size: 30,
+                    ),
                   ),
-                  Icon(
-                    Icons.list_alt,
-                    size: 30,
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.list_alt,
+                      size: 30,
+                    ),
                   ),
                 ],
               ),
@@ -89,9 +105,39 @@ class NoteScreenState extends State<NoteScreen> {
                             ? const Color(0xFF373737)
                             : const Color(0xFFe1e1e0)),
                   ),
-                  style: const TextStyle(fontSize: 40),
+                  style: const TextStyle(fontSize: 38),
                 ),
-                textBlock(testController)
+                Expanded(
+                  child: ReorderableListView(
+                    children: [
+                      for (final textBlock in textBlocks)
+                        ListTile(
+                          contentPadding: const EdgeInsets.all(4),
+                          trailing: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  textBlocks.remove(textBlock);
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.delete_forever,
+                                size: 24,
+                              )),
+                          key: ValueKey(textBlock),
+                          title: textBlock,
+                        )
+                    ],
+                    onReorder: (oldIndex, newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) {
+                          newIndex = newIndex - 1;
+                        }
+                        final item = textBlocks.removeAt(oldIndex);
+                        textBlocks.insert(newIndex, item);
+                      });
+                    },
+                  ),
+                ),
               ],
             ),
           ),
