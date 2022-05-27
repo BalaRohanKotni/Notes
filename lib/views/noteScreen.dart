@@ -70,14 +70,14 @@ class NoteScreenState extends State<NoteScreen> {
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(
-                      Icons.text_format,
+                      Icons.list_alt,
                       size: 30,
                     ),
                   ),
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(
-                      Icons.list_alt,
+                      Icons.text_format,
                       size: 30,
                     ),
                   ),
@@ -119,9 +119,12 @@ class NoteScreenState extends State<NoteScreen> {
                                   textBlocks.remove(textBlock);
                                 });
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.delete_forever,
                                 size: 24,
+                                color: (widget.themeMode == ThemeMode.light)
+                                    ? Colors.black
+                                    : Colors.white,
                               )),
                           key: ValueKey(textBlock),
                           title: textBlock,
