@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/components/customTextFieldContoller.dart';
+import 'package:notes/controllers/customTextFieldContoller.dart';
 import 'package:notes/controllers/appTheme.dart';
 
 class NoteScreen extends StatefulWidget {
