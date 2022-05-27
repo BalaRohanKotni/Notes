@@ -19,8 +19,8 @@ class CustomTextFieldController extends TextEditingController {
         style?.copyWith(fontSize: 36, fontWeight: FontWeight.bold)
       ],
       "`": [r'`(.+?)`', style?.copyWith(fontFamily: "SpaceMono")],
-      "~": [
-        r'~(.+?)~',
+      "~~": [
+        r'~~(.+?)~~',
         style?.copyWith(decoration: TextDecoration.lineThrough)
       ],
       "***": [
