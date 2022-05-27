@@ -46,6 +46,15 @@ class NoteScreenState extends State<NoteScreen> {
       darkTheme: theme.darkTheme,
       home: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: (widget.themeMode == ThemeMode.light)
+                  ? Colors.black
+                  : Colors.white,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
