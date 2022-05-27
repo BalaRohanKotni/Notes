@@ -18,6 +18,7 @@ class AppTheme with ChangeNotifier {
       fontFamily: "SourceSansPro",
       secondaryHeaderColor: kCaledonBLue,
       appBarTheme: const AppBarTheme(
+        foregroundColor: Colors.black,
         backgroundColor: Colors.white,
       ),
       cardTheme: const CardTheme(
@@ -27,9 +28,8 @@ class AppTheme with ChangeNotifier {
         backgroundColor: Colors.white,
       ),
       textTheme: const TextTheme(
-        bodyText2: TextStyle(
-          color: kSpaceCadet,
-        ),
+        subtitle1: TextStyle(color: Colors.black, fontFamily: "SourceSansPro"),
+        bodyText2: TextStyle(color: Colors.black, fontFamily: "SourceSansPro"),
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
