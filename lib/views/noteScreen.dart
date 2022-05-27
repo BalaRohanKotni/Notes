@@ -80,10 +80,14 @@ class NoteScreenState extends State<NoteScreen> {
                   onChanged: (context) {
                     setState(() {});
                   },
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Untitled",
-                    hintStyle: TextStyle(fontSize: 40),
+                    hintStyle: TextStyle(
+                        fontSize: 40,
+                        color: (widget.themeMode == ThemeMode.dark)
+                            ? const Color(0xFF373737)
+                            : const Color(0xFFe1e1e0)),
                   ),
                   style: const TextStyle(fontSize: 40),
                 ),
