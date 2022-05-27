@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/controllers/customTextFieldContoller.dart';
 import 'package:notes/controllers/appTheme.dart';
+import '../components/textBlock.dart';
 
 class NoteScreen extends StatefulWidget {
   final User user;
@@ -90,21 +91,6 @@ class NoteScreenState extends State<NoteScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Expanded textBlock(CustomTextFieldController testController) {
-    return Expanded(
-      child: TextField(
-          controller: testController,
-          maxLines: null,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-          ),
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-          )),
     );
   }
 }
