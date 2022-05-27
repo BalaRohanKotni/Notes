@@ -78,10 +78,11 @@ class NoteScreenState extends State<NoteScreen> {
                     setState(() {});
                   },
                   decoration: const InputDecoration(
+                    border: InputBorder.none,
                     hintText: "Untitled",
-                    hintStyle: TextStyle(fontSize: 42),
+                    hintStyle: TextStyle(fontSize: 40),
                   ),
-                  style: const TextStyle(fontSize: 42),
+                  style: const TextStyle(fontSize: 40),
                 ),
                 textBlock(testController)
               ],
@@ -95,10 +96,15 @@ class NoteScreenState extends State<NoteScreen> {
   Expanded textBlock(CustomTextFieldController testController) {
     return Expanded(
       child: TextField(
-        controller: testController,
-        maxLines: null,
-        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-      ),
+          controller: testController,
+          maxLines: null,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+          ),
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+          )),
     );
   }
 }
