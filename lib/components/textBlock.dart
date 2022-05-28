@@ -13,7 +13,7 @@ Expanded textBlock(
           controller: testController,
           maxLines: null,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
           decoration: const InputDecoration(
