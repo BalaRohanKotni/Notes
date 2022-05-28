@@ -20,8 +20,13 @@ class NoteScreenState extends State<NoteScreen> {
   TextEditingController titleEditingController = TextEditingController();
   CustomTextFieldController testController = CustomTextFieldController();
 
-  List<Widget> textBlocks = [];
+  FocusNode focusNode = FocusNode();
 
+  List<Widget> textBlocks = [];
+  List<CustomTextFieldController> textBlockControllers = [];
+  List<FocusNode> textBlockFocusNodes = [];
+
+  bool focusOnTitle = true;
   // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
   // r'##### (.*)': const TextStyle(fontSize: 13.28 + 8),
   // r'#### (.*)': const TextStyle(fontSize: 16 + 8),
@@ -36,10 +41,20 @@ class NoteScreenState extends State<NoteScreen> {
     super.initState();
     theme = AppTheme(widget.user.uid);
     // SystemChannels.textInput.invokeListMethod("TextInput.show");
+
+    FocusNode fNode = FocusNode();
+    CustomTextFieldController cTextFieldController =
+        CustomTextFieldController();
+    textBlockFocusNodes.add(fNode);
+    textBlockControllers.add(cTextFieldController);
+    textBlocks.add(textBlock(cTextFieldController, fNode, widget));
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!focusOnTitle) {
+      FocusScope.of(context).requestFocus(textBlockFocusNodes.last);
+    }
     return MaterialApp(
       themeMode: widget.themeMode,
       theme: theme.lightTheme,
@@ -67,8 +82,14 @@ class NoteScreenState extends State<NoteScreen> {
                   IconButton(
                     onPressed: () {
                       setState(() {
+                        focusOnTitle = false;
+                        FocusNode fNode = FocusNode();
+                        CustomTextFieldController cTextFieldController =
+                            CustomTextFieldController();
+                        textBlockFocusNodes.add(fNode);
+                        textBlockControllers.add(cTextFieldController);
                         textBlocks.add(
-                            textBlock(CustomTextFieldController(), widget));
+                            textBlock(cTextFieldController, fNode, widget));
                       });
                     },
                     icon: const Icon(
@@ -100,21 +121,36 @@ class NoteScreenState extends State<NoteScreen> {
             margin: const EdgeInsets.all(8),
             child: Column(
               children: [
-                TextField(
-                  controller: titleEditingController,
-                  onChanged: (context) {
-                    setState(() {});
+                Focus(
+                  onFocusChange: (hasFocus) {
+                    if (hasFocus) {
+                      focusOnTitle = true;
+                    }
                   },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Untitled",
-                    hintStyle: TextStyle(
-                        fontSize: 36,
-                        color: (widget.themeMode == ThemeMode.dark)
-                            ? const Color(0xFF373737)
-                            : const Color(0xFFe1e1e0)),
+                  child: TextField(
+                    autofocus: true,
+                    controller: titleEditingController,
+                    onChanged: (context) {
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Untitled",
+                      hintStyle: TextStyle(
+                          fontSize: 36,
+                          color: (widget.themeMode == ThemeMode.dark)
+                              ? const Color(0xFF373737)
+                              : const Color(0xFFe1e1e0)),
+                    ),
+                    style: const TextStyle(fontSize: 36),
+                    onSubmitted: (text) {
+                      FocusScope.of(context)
+                          .requestFocus(textBlockFocusNodes.last);
+                      setState(() {
+                        focusOnTitle = false;
+                      });
+                    },
                   ),
-                  style: const TextStyle(fontSize: 36),
                 ),
                 Expanded(
                   child: ReorderableListView(
@@ -125,7 +161,10 @@ class NoteScreenState extends State<NoteScreen> {
                           trailing: IconButton(
                               onPressed: () {
                                 setState(() {
+                                  int index = textBlocks.indexOf(textBlock);
                                   textBlocks.remove(textBlock);
+                                  textBlockFocusNodes.removeAt(index);
+                                  textBlockControllers.removeAt(index);
                                 });
                               },
                               icon: Icon(
