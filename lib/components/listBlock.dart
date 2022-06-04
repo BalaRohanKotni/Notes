@@ -6,13 +6,15 @@ class ListBlock extends StatefulWidget {
   final List list;
   final ThemeMode themeMode;
   final FocusNode focusNode;
-  final VoidCallback emptyListBlock;
+  final VoidCallback deleteListBlock;
+  final VoidCallback toggleToNextBlock;
   const ListBlock({
     Key? key,
     required this.list,
     required this.themeMode,
     required this.focusNode,
-    required this.emptyListBlock,
+    required this.deleteListBlock,
+    required this.toggleToNextBlock,
   }) : super(key: key);
 
   @override
@@ -45,7 +47,7 @@ class _ListBlockState extends State<ListBlock> {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuilding");
+    print("building listBlock.dart");
     focusChange();
     return Container(
         color: (widget.themeMode == ThemeMode.dark)
@@ -76,7 +78,7 @@ class _ListBlockState extends State<ListBlock> {
                           focusNodes.removeAt(index);
                           focusNodes.last.requestFocus();
                         } else {
-                          widget.emptyListBlock();
+                          widget.deleteListBlock();
                         }
                       });
                     }
@@ -86,13 +88,21 @@ class _ListBlockState extends State<ListBlock> {
                 child: TextField(
                     focusNode: focusNodes[index],
                     onSubmitted: (value) {
-                      setState(() {
-                        widget.list.last[1] = controllers.last.text;
-                        widget.list.add([false, ""]);
-                        controllers.add(CustomTextFieldController());
-                        focusNodes.add(FocusNode());
-                        focusNodes.last.requestFocus();
-                      });
+                      if (widget.list.isEmpty &&
+                          controllers[index].text.isEmpty) {
+                        widget.deleteListBlock();
+                      } else if (controllers[index].text.isEmpty &&
+                          widget.list.isNotEmpty) {
+                        widget.toggleToNextBlock();
+                      } else {
+                        setState(() {
+                          widget.list.last[1] = controllers.last.text;
+                          widget.list.add([false, ""]);
+                          controllers.add(CustomTextFieldController());
+                          focusNodes.add(FocusNode());
+                          focusNodes.last.requestFocus();
+                        });
+                      }
                     },
                     controller: controllers[index],
                     maxLines: 1,
