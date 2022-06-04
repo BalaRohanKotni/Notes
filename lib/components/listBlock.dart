@@ -93,14 +93,22 @@ class _ListBlockState extends State<ListBlock> {
                         widget.deleteListBlock();
                       } else if (controllers[index].text.isEmpty &&
                           widget.list.isNotEmpty) {
+                        widget.list.removeAt(widget.list.length - 1);
+                        controllers.removeAt(controllers.length - 1);
+                        focusNodes.removeAt(focusNodes.length - 1);
                         widget.toggleToNextBlock();
+                        setState(() {});
                       } else {
                         setState(() {
                           widget.list.last[1] = controllers.last.text;
-                          widget.list.add([false, ""]);
-                          controllers.add(CustomTextFieldController());
-                          focusNodes.add(FocusNode());
-                          focusNodes.last.requestFocus();
+                          if (controllers.last.text.isNotEmpty) {
+                            widget.list.add([false, ""]);
+                            controllers.add(CustomTextFieldController());
+                            focusNodes.add(FocusNode());
+                            focusNodes.last.requestFocus();
+                          } else {
+                            focusNodes.last.requestFocus();
+                          }
                         });
                       }
                     },
