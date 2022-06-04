@@ -127,6 +127,5 @@ class _ListBlockState extends State<ListBlock> {
           itemCount: widget.list.length,
           onReorder: (oldIndex, newIndex) {},
         ));
-    ;
   }
 }
