@@ -23,22 +23,8 @@ class NoteScreenState extends State<NoteScreen> {
   CustomTextFieldController testController = CustomTextFieldController();
 
   FocusNode focusNode = FocusNode();
-
   List<dynamic> blocks = [];
-
-  // List<Widget> textBlocks = [];
-  // List<CustomTextFieldController> textBlockControllers = [];
-  // List<FocusNode> textBlockFocusNodes = [];
-
   bool focusOnTitle = true;
-  // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
-  // r'##### (.*)': const TextStyle(fontSize: 13.28 + 8),
-  // r'#### (.*)': const TextStyle(fontSize: 16 + 8),
-  // r'### (.*)': const TextStyle(fontSize: 18.72 + 8),
-  // r'## (.*)': const TextStyle(fontSize: 24 + 8),
-  // r'# (.*)': const TextStyle(fontSize: 32 + 8),
-  // r'\*\*(.*?)\*\*': const TextStyle(fontWeight: FontWeight.bold),
-  // r'\*(.*?)\*': const TextStyle(fontStyle: FontStyle.italic),
 
   @override
   void initState() {
@@ -46,6 +32,8 @@ class NoteScreenState extends State<NoteScreen> {
     theme = AppTheme(widget.user.uid);
     // SystemChannels.textInput.invokeListMethod("TextInput.show");
 
+    int currentId = textBlockId;
+    textBlockId++;
     FocusNode fNode = FocusNode();
     CustomTextFieldController cTextFieldController =
         CustomTextFieldController();
@@ -53,23 +41,24 @@ class NoteScreenState extends State<NoteScreen> {
       "type": "textBlock",
       "controller": cTextFieldController,
       "focusNode": fNode,
-      "block": textBlock(cTextFieldController, fNode, widget),
+      "id": currentId,
+      "block": textBlock(
+        cTextFieldController,
+        fNode,
+        widget,
+        () {
+          for (var block in blocks) {
+            if (block["type"] == "textBlock" && block["id"] == currentId) {
+              blocks.remove(block);
+              setState(() {});
+              break;
+            }
+          }
+        },
+      ),
     });
-
-    // FocusNode listBlockFocusNode = FocusNode();
-    // blocks.add({
-    //   "type": "listBlock",
-    //   "focusNode": listBlockFocusNode,
-    //   "block": ListBlock(
-    //     list: const [
-    //       [false, ""]
-    //     ],
-    //     themeMode: widget.themeMode,
-    //     focusNode: listBlockFocusNode,
-    //   ),
-    // });
-
 // TODO: Get listBlockId from firestore
+// TODO: Get textBlockId from firestore
   }
 
   @override
@@ -109,12 +98,27 @@ class NoteScreenState extends State<NoteScreen> {
                         FocusNode fNode = FocusNode();
                         CustomTextFieldController cTextFieldController =
                             CustomTextFieldController();
+                        int currentId = textBlockId;
+                        textBlockId++;
                         blocks.add({
                           "type": "textBlock",
                           "controller": cTextFieldController,
                           "focusNode": fNode,
-                          "block":
-                              textBlock(cTextFieldController, fNode, widget),
+                          "block": textBlock(
+                            cTextFieldController,
+                            fNode,
+                            widget,
+                            () {
+                              for (var block in blocks) {
+                                if (block["type"] == "textBlock" &&
+                                    block["id"] == currentId) {
+                                  blocks.remove(block);
+                                  setState(() {});
+                                  break;
+                                }
+                              }
+                            },
+                          ),
                         });
                       });
                     },
@@ -155,6 +159,8 @@ class NoteScreenState extends State<NoteScreen> {
                                 if (blocks[ind]["type"] == "listBlock" &&
                                     blocks[ind]["id"] == currentId) {
                                   if (ind == blocks.length - 1) {
+                                    int textBlockCurrentId = textBlockId;
+                                    textBlockId++;
                                     focusOnTitle = false;
                                     FocusNode fNode = FocusNode();
                                     CustomTextFieldController
@@ -165,7 +171,21 @@ class NoteScreenState extends State<NoteScreen> {
                                       "controller": cTextFieldController,
                                       "focusNode": fNode,
                                       "block": textBlock(
-                                          cTextFieldController, fNode, widget),
+                                        cTextFieldController,
+                                        fNode,
+                                        widget,
+                                        () {
+                                          for (var block in blocks) {
+                                            if (block["type"] == "textBlock" &&
+                                                block["id"] ==
+                                                    textBlockCurrentId) {
+                                              blocks.remove(block);
+                                              setState(() {});
+                                              break;
+                                            }
+                                          }
+                                        },
+                                      ),
                                     });
                                   }
                                   setState(() {});
@@ -223,11 +243,10 @@ class NoteScreenState extends State<NoteScreen> {
                     ),
                     style: const TextStyle(fontSize: 36),
                     onSubmitted: (text) {
-                      // TODO: This
-                      // FocusScope.of(context)
-                      //     .requestFocus(textBlockFocusNodes.last);
                       setState(() {
                         if (blocks.isEmpty) {
+                          int textBlockCurrentId = textBlockId;
+                          textBlockId++;
                           FocusNode fNode = FocusNode();
                           CustomTextFieldController cTextFieldController =
                               CustomTextFieldController();
@@ -235,8 +254,21 @@ class NoteScreenState extends State<NoteScreen> {
                             "type": "textBlock",
                             "controller": cTextFieldController,
                             "focusNode": fNode,
-                            "block":
-                                textBlock(cTextFieldController, fNode, widget),
+                            "block": textBlock(
+                              cTextFieldController,
+                              fNode,
+                              widget,
+                              () {
+                                for (var block in blocks) {
+                                  if (block["type"] == "textBlock" &&
+                                      block["id"] == textBlockCurrentId) {
+                                    blocks.remove(block);
+                                    setState(() {});
+                                    break;
+                                  }
+                                }
+                              },
+                            ),
                           });
                         }
                         focusOnTitle = false;
@@ -250,20 +282,6 @@ class NoteScreenState extends State<NoteScreen> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         contentPadding: const EdgeInsets.all(4),
-                        trailing: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                blocks.remove(blocks[index]);
-                                focusOnTitle = false;
-                              });
-                            },
-                            icon: Icon(
-                              Icons.delete_forever,
-                              size: 24,
-                              color: (widget.themeMode == ThemeMode.light)
-                                  ? Colors.black
-                                  : Colors.white,
-                            )),
                         key: ValueKey(blocks[index]["block"]),
                         title: blocks[index]["block"],
                       );
