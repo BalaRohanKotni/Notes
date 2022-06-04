@@ -47,18 +47,24 @@ class NoteScreenState extends State<NoteScreen> {
         fNode,
         widget,
         () {
-          for (var block in blocks) {
-            if (block["type"] == "textBlock" && block["id"] == currentId) {
-              blocks.remove(block);
-              setState(() {});
-              break;
-            }
-          }
+          removeTextBlock(currentId);
         },
       ),
     });
 // TODO: Get listBlockId from firestore
 // TODO: Get textBlockId from firestore
+  }
+
+  void removeTextBlock(int id) {
+    int index = 0;
+    for (var block in blocks) {
+      if (block["type"] == "textBlock" && block["id"] == id && index != 0) {
+        blocks.remove(block);
+        setState(() {});
+        break;
+      }
+      index++;
+    }
   }
 
   @override
@@ -110,14 +116,7 @@ class NoteScreenState extends State<NoteScreen> {
                             fNode,
                             widget,
                             () {
-                              for (var block in blocks) {
-                                if (block["type"] == "textBlock" &&
-                                    block["id"] == currentId) {
-                                  blocks.remove(block);
-                                  setState(() {});
-                                  break;
-                                }
-                              }
+                              removeTextBlock(currentId);
                             },
                           ),
                         });
@@ -177,16 +176,7 @@ class NoteScreenState extends State<NoteScreen> {
                                         fNode,
                                         widget,
                                         () {
-                                          print("called");
-                                          for (var block in blocks) {
-                                            if (block["type"] == "textBlock" &&
-                                                block["id"] ==
-                                                    textBlockCurrentId) {
-                                              blocks.remove(block);
-                                              setState(() {});
-                                              break;
-                                            }
-                                          }
+                                          removeTextBlock(textBlockCurrentId);
                                         },
                                       ),
                                     });
@@ -263,14 +253,7 @@ class NoteScreenState extends State<NoteScreen> {
                               fNode,
                               widget,
                               () {
-                                for (var block in blocks) {
-                                  if (block["type"] == "textBlock" &&
-                                      block["id"] == textBlockCurrentId) {
-                                    blocks.remove(block);
-                                    setState(() {});
-                                    break;
-                                  }
-                                }
+                                removeTextBlock(textBlockCurrentId);
                               },
                             ),
                           });
