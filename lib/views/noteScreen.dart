@@ -281,7 +281,8 @@ class NoteScreenState extends State<NoteScreen> {
                     itemCount: blocks.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        contentPadding: const EdgeInsets.all(4),
+                        contentPadding: const EdgeInsets.all(0),
+                        minVerticalPadding: 0,
                         key: ValueKey(blocks[index]["block"]),
                         title: blocks[index]["block"],
                       );
