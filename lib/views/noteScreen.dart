@@ -1,5 +1,12 @@
+import 'dart:ffi';
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:notes/components/listBlock.dart';
+import 'package:notes/constants.dart';
 import 'package:notes/controllers/customTextFieldContoller.dart';
 import 'package:notes/controllers/appTheme.dart';
 import '../components/textBlock.dart';
@@ -22,9 +29,11 @@ class NoteScreenState extends State<NoteScreen> {
 
   FocusNode focusNode = FocusNode();
 
-  List<Widget> textBlocks = [];
-  List<CustomTextFieldController> textBlockControllers = [];
-  List<FocusNode> textBlockFocusNodes = [];
+  List<dynamic> blocks = [];
+
+  // List<Widget> textBlocks = [];
+  // List<CustomTextFieldController> textBlockControllers = [];
+  // List<FocusNode> textBlockFocusNodes = [];
 
   bool focusOnTitle = true;
   // r'###### (.*)': const TextStyle(fontSize: 10.72 + 8),
@@ -45,15 +54,33 @@ class NoteScreenState extends State<NoteScreen> {
     FocusNode fNode = FocusNode();
     CustomTextFieldController cTextFieldController =
         CustomTextFieldController();
-    textBlockFocusNodes.add(fNode);
-    textBlockControllers.add(cTextFieldController);
-    textBlocks.add(textBlock(cTextFieldController, fNode, widget));
+    blocks.add({
+      "type": "textBlock",
+      "controller": cTextFieldController,
+      "focusNode": fNode,
+      "block": textBlock(cTextFieldController, fNode, widget),
+    });
+
+    // FocusNode listBlockFocusNode = FocusNode();
+    // blocks.add({
+    //   "type": "listBlock",
+    //   "focusNode": listBlockFocusNode,
+    //   "block": ListBlock(
+    //     list: const [
+    //       [false, ""]
+    //     ],
+    //     themeMode: widget.themeMode,
+    //     focusNode: listBlockFocusNode,
+    //   ),
+    // });
+
+// TODO: Get listBlockId from firestore
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!focusOnTitle) {
-      FocusScope.of(context).requestFocus(textBlockFocusNodes.last);
+    if (!focusOnTitle && blocks.isNotEmpty) {
+      FocusScope.of(context).requestFocus(blocks.last["focusNode"]);
     }
     return MaterialApp(
       themeMode: widget.themeMode,
@@ -86,10 +113,13 @@ class NoteScreenState extends State<NoteScreen> {
                         FocusNode fNode = FocusNode();
                         CustomTextFieldController cTextFieldController =
                             CustomTextFieldController();
-                        textBlockFocusNodes.add(fNode);
-                        textBlockControllers.add(cTextFieldController);
-                        textBlocks.add(
-                            textBlock(cTextFieldController, fNode, widget));
+                        blocks.add({
+                          "type": "textBlock",
+                          "controller": cTextFieldController,
+                          "focusNode": fNode,
+                          "block":
+                              textBlock(cTextFieldController, fNode, widget),
+                        });
                       });
                     },
                     icon: const Icon(
@@ -98,7 +128,37 @@ class NoteScreenState extends State<NoteScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        FocusNode listBlockFocusNode = FocusNode();
+                        List list = [
+                          [false, ""]
+                        ];
+                        int currentId = listBlockId;
+                        blocks.add({
+                          "id": currentId,
+                          "type": "listBlock",
+                          "focusNode": listBlockFocusNode,
+                          "list": list,
+                          "block": ListBlock(
+                            list: list,
+                            themeMode: widget.themeMode,
+                            focusNode: listBlockFocusNode,
+                            emptyListBlock: () {
+                              for (var block in blocks) {
+                                if (block["type"] == "listBlock" &&
+                                    block["id"] == currentId) {
+                                  blocks.remove(block);
+                                  setState(() {});
+                                }
+                              }
+                              // blocks.remove(value)
+                            },
+                          ),
+                        });
+                        listBlockId += 1;
+                      });
+                    },
                     icon: const Icon(
                       Icons.list_alt,
                       size: 30,
@@ -144,47 +204,58 @@ class NoteScreenState extends State<NoteScreen> {
                     ),
                     style: const TextStyle(fontSize: 36),
                     onSubmitted: (text) {
-                      FocusScope.of(context)
-                          .requestFocus(textBlockFocusNodes.last);
+                      // TODO: This
+                      // FocusScope.of(context)
+                      //     .requestFocus(textBlockFocusNodes.last);
                       setState(() {
+                        if (blocks.isEmpty) {
+                          FocusNode fNode = FocusNode();
+                          CustomTextFieldController cTextFieldController =
+                              CustomTextFieldController();
+                          blocks.add({
+                            "type": "textBlock",
+                            "controller": cTextFieldController,
+                            "focusNode": fNode,
+                            "block":
+                                textBlock(cTextFieldController, fNode, widget),
+                          });
+                        }
                         focusOnTitle = false;
                       });
                     },
                   ),
                 ),
                 Expanded(
-                  child: ReorderableListView(
-                    children: [
-                      for (final textBlock in textBlocks)
-                        ListTile(
-                          contentPadding: const EdgeInsets.all(4),
-                          trailing: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  int index = textBlocks.indexOf(textBlock);
-                                  textBlocks.remove(textBlock);
-                                  textBlockFocusNodes.removeAt(index);
-                                  textBlockControllers.removeAt(index);
-                                });
-                              },
-                              icon: Icon(
-                                Icons.delete_forever,
-                                size: 24,
-                                color: (widget.themeMode == ThemeMode.light)
-                                    ? Colors.black
-                                    : Colors.white,
-                              )),
-                          key: ValueKey(textBlock),
-                          title: textBlock,
-                        )
-                    ],
+                  child: ReorderableList(
+                    itemCount: blocks.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        contentPadding: const EdgeInsets.all(4),
+                        trailing: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                blocks.remove(blocks[index]);
+                                focusOnTitle = false;
+                              });
+                            },
+                            icon: Icon(
+                              Icons.delete_forever,
+                              size: 24,
+                              color: (widget.themeMode == ThemeMode.light)
+                                  ? Colors.black
+                                  : Colors.white,
+                            )),
+                        key: ValueKey(blocks[index]["block"]),
+                        title: blocks[index]["block"],
+                      );
+                    },
                     onReorder: (oldIndex, newIndex) {
                       setState(() {
                         if (newIndex > oldIndex) {
                           newIndex = newIndex - 1;
                         }
-                        final item = textBlocks.removeAt(oldIndex);
-                        textBlocks.insert(newIndex, item);
+                        final item = blocks.removeAt(oldIndex);
+                        blocks.insert(newIndex, item);
                       });
                     },
                   ),
