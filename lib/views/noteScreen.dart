@@ -82,6 +82,7 @@ class NoteScreenState extends State<NoteScreen> {
     if (!focusOnTitle && blocks.isNotEmpty) {
       FocusScope.of(context).requestFocus(blocks.last["focusNode"]);
     }
+    print("building noteScreen.dart");
     return MaterialApp(
       themeMode: widget.themeMode,
       theme: theme.lightTheme,
@@ -144,15 +145,38 @@ class NoteScreenState extends State<NoteScreen> {
                             list: list,
                             themeMode: widget.themeMode,
                             focusNode: listBlockFocusNode,
-                            emptyListBlock: () {
+                            deleteListBlock: () {
                               for (var block in blocks) {
                                 if (block["type"] == "listBlock" &&
                                     block["id"] == currentId) {
                                   blocks.remove(block);
                                   setState(() {});
+                                  break;
                                 }
                               }
-                              // blocks.remove(value)
+                            },
+                            toggleToNextBlock: () {
+                              for (int ind = 0; ind < blocks.length; ind++) {
+                                if (blocks[ind]["type"] == "listBlock" &&
+                                    blocks[ind]["id"] == currentId) {
+                                  if (ind == blocks.length - 1) {
+                                    focusOnTitle = false;
+                                    FocusNode fNode = FocusNode();
+                                    CustomTextFieldController
+                                        cTextFieldController =
+                                        CustomTextFieldController();
+                                    blocks.add({
+                                      "type": "textBlock",
+                                      "controller": cTextFieldController,
+                                      "focusNode": fNode,
+                                      "block": textBlock(
+                                          cTextFieldController, fNode, widget),
+                                    });
+                                  }
+                                  setState(() {});
+                                  break;
+                                }
+                              }
                             },
                           ),
                         });
