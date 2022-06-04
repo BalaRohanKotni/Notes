@@ -52,9 +52,7 @@ class TextFieldFormatter extends TextEditingController {
             command = command.replaceAll("\\", "");
             int posFirstParanthesis = command.indexOf('(');
             command = command.substring(0, posFirstParanthesis);
-            print([key, command]);
             formatText = match[0]!.replaceAll(command, " ");
-            // print([key[0], formatText]);
           }
         });
 
