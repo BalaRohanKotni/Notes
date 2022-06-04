@@ -234,7 +234,8 @@ class NoteScreenState extends State<NoteScreen> {
                               ? const Color(0xFF373737)
                               : const Color(0xFFe1e1e0)),
                     ),
-                    style: const TextStyle(fontSize: 36),
+                    style: const TextStyle(
+                        fontSize: 36, fontWeight: FontWeight.bold),
                     onSubmitted: (text) {
                       setState(() {
                         if (blocks.isEmpty) {
