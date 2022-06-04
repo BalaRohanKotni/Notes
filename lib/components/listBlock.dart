@@ -49,83 +49,91 @@ class _ListBlockState extends State<ListBlock> {
   Widget build(BuildContext context) {
     print("building listBlock.dart");
     focusChange();
-    return Container(
-        color: (widget.themeMode == ThemeMode.dark)
-            ? const Color.fromARGB(255, 37, 37, 37)
-            : const Color.fromARGB(255, 239, 239, 239),
-        child: ReorderableList(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ListTile(
-              key: ValueKey(index),
-              leading: Checkbox(
-                value: widget.list[index][0],
-                onChanged: (value) {
-                  setState(() {
-                    widget.list[index][0] = value;
-                  });
-                },
-              ),
-              title: RawKeyboardListener(
-                onKey: (event) {
-                  if (event.logicalKey == LogicalKeyboardKey.backspace) {
-                    if (controllers[index].text.isEmpty) {
+    return ReorderableList(
+      physics: const NeverScrollableScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return ListTile(
+          minLeadingWidth: -4,
+          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+          contentPadding: const EdgeInsets.only(left: 8),
+          minVerticalPadding: 0,
+          key: ValueKey(index),
+          leading: SizedBox(
+            height: 24,
+            width: 24,
+            child: Checkbox(
+              value: widget.list[index][0],
+              onChanged: (value) {
+                setState(() {
+                  widget.list[index][0] = value;
+                });
+              },
+            ),
+          ),
+          title: SizedBox(
+            height: 24,
+            child: RawKeyboardListener(
+              onKey: (event) {
+                if (event.logicalKey == LogicalKeyboardKey.backspace) {
+                  if (controllers[index].text.isEmpty) {
+                    setState(() {
+                      if (index != 0) {
+                        widget.list.removeAt(index);
+                        controllers.removeAt(index);
+                        focusNodes.removeAt(index);
+                        focusNodes.last.requestFocus();
+                      } else {
+                        widget.deleteListBlock();
+                      }
+                    });
+                  }
+                }
+              },
+              focusNode: FocusNode(),
+              child: TextField(
+                  focusNode: focusNodes[index],
+                  onSubmitted: (value) {
+                    if (widget.list.isEmpty &&
+                        controllers[index].text.isEmpty) {
+                      widget.deleteListBlock();
+                    } else if (controllers[index].text.isEmpty &&
+                        widget.list.isNotEmpty) {
+                      widget.list.removeAt(widget.list.length - 1);
+                      controllers.removeAt(controllers.length - 1);
+                      focusNodes.removeAt(focusNodes.length - 1);
+                      widget.toggleToNextBlock();
+                      setState(() {});
+                    } else {
                       setState(() {
-                        if (index != 0) {
-                          widget.list.removeAt(index);
-                          controllers.removeAt(index);
-                          focusNodes.removeAt(index);
+                        widget.list.last[1] = controllers.last.text;
+                        if (controllers.last.text.isNotEmpty) {
+                          widget.list.add([false, ""]);
+                          controllers.add(CustomTextFieldController());
+                          focusNodes.add(FocusNode());
                           focusNodes.last.requestFocus();
                         } else {
-                          widget.deleteListBlock();
+                          focusNodes.last.requestFocus();
                         }
                       });
                     }
-                  }
-                },
-                focusNode: FocusNode(),
-                child: TextField(
-                    focusNode: focusNodes[index],
-                    onSubmitted: (value) {
-                      if (widget.list.isEmpty &&
-                          controllers[index].text.isEmpty) {
-                        widget.deleteListBlock();
-                      } else if (controllers[index].text.isEmpty &&
-                          widget.list.isNotEmpty) {
-                        widget.list.removeAt(widget.list.length - 1);
-                        controllers.removeAt(controllers.length - 1);
-                        focusNodes.removeAt(focusNodes.length - 1);
-                        widget.toggleToNextBlock();
-                        setState(() {});
-                      } else {
-                        setState(() {
-                          widget.list.last[1] = controllers.last.text;
-                          if (controllers.last.text.isNotEmpty) {
-                            widget.list.add([false, ""]);
-                            controllers.add(CustomTextFieldController());
-                            focusNodes.add(FocusNode());
-                            focusNodes.last.requestFocus();
-                          } else {
-                            focusNodes.last.requestFocus();
-                          }
-                        });
-                      }
-                    },
-                    controller: controllers[index],
-                    maxLines: 1,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    )),
-              ),
-            );
-          },
-          itemCount: widget.list.length,
-          onReorder: (oldIndex, newIndex) {},
-        ));
+                  },
+                  controller: controllers[index],
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                  )),
+            ),
+          ),
+        );
+      },
+      itemCount: widget.list.length,
+      onReorder: (oldIndex, newIndex) {},
+    );
   }
 }
