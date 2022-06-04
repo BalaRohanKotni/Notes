@@ -101,6 +101,7 @@ class NoteScreenState extends State<NoteScreen> {
                         int currentId = textBlockId;
                         textBlockId++;
                         blocks.add({
+                          "id": currentId,
                           "type": "textBlock",
                           "controller": cTextFieldController,
                           "focusNode": fNode,
@@ -167,6 +168,7 @@ class NoteScreenState extends State<NoteScreen> {
                                         cTextFieldController =
                                         CustomTextFieldController();
                                     blocks.add({
+                                      "id": textBlockCurrentId,
                                       "type": "textBlock",
                                       "controller": cTextFieldController,
                                       "focusNode": fNode,
@@ -175,6 +177,7 @@ class NoteScreenState extends State<NoteScreen> {
                                         fNode,
                                         widget,
                                         () {
+                                          print("called");
                                           for (var block in blocks) {
                                             if (block["type"] == "textBlock" &&
                                                 block["id"] ==
@@ -251,6 +254,7 @@ class NoteScreenState extends State<NoteScreen> {
                           CustomTextFieldController cTextFieldController =
                               CustomTextFieldController();
                           blocks.add({
+                            "id": textBlockCurrentId,
                             "type": "textBlock",
                             "controller": cTextFieldController,
                             "focusNode": fNode,
