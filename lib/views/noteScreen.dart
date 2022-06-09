@@ -196,13 +196,6 @@ class NoteScreenState extends State<NoteScreen> {
                       size: 30,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.text_format,
-                      size: 30,
-                    ),
-                  ),
                 ],
               ),
             ],
