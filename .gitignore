@@ -50,9 +50,11 @@ fonts/
 ios/
 web/
 windows/
+macos/
+linux/
 .metadata
 .packages
 analysis_options.yaml
 pubspec.lock
-root-order.txt
+firebase_options.dart
 
