@@ -43,6 +43,10 @@ class AppTheme with ChangeNotifier {
 
   ThemeData get darkTheme {
     return ThemeData(
+      checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateProperty.all(Colors.white),
+        checkColor: MaterialStateProperty.all(Colors.black),
+      ),
       scaffoldBackgroundColor: const Color(0xFF1A1A1A),
       secondaryHeaderColor: kCaledonBLue,
       appBarTheme: const AppBarTheme(
