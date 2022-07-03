@@ -25,6 +25,7 @@ class NoteScreenState extends State<NoteScreen> {
   FocusNode focusNode = FocusNode();
   List<dynamic> blocks = [];
   bool focusOnTitle = true;
+  FocusNode titleFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -58,8 +59,11 @@ class NoteScreenState extends State<NoteScreen> {
   void removeTextBlock(int id) {
     int index = 0;
     for (var block in blocks) {
-      if (block["type"] == "textBlock" && block["id"] == id && index != 0) {
+      if (block["type"] == "textBlock" && block["id"] == id) {
         blocks.remove(block);
+        if (index == 0) {
+          focusOnTitle = true;
+        }
         setState(() {});
         break;
       }
@@ -71,6 +75,8 @@ class NoteScreenState extends State<NoteScreen> {
   Widget build(BuildContext context) {
     if (!focusOnTitle && blocks.isNotEmpty) {
       FocusScope.of(context).requestFocus(blocks.last["focusNode"]);
+    } else if (focusOnTitle && blocks.isEmpty) {
+      FocusScope.of(context).requestFocus(titleFocusNode);
     }
     print("building noteScreen.dart");
     return MaterialApp(
@@ -213,6 +219,7 @@ class NoteScreenState extends State<NoteScreen> {
                     }
                   },
                   child: TextField(
+                    focusNode: titleFocusNode,
                     autofocus: true,
                     controller: titleEditingController,
                     onChanged: (context) {
@@ -258,25 +265,52 @@ class NoteScreenState extends State<NoteScreen> {
                   ),
                 ),
                 Expanded(
-                  child: ReorderableList(
-                    itemCount: blocks.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        contentPadding: const EdgeInsets.all(0),
-                        minVerticalPadding: 0,
-                        key: ValueKey(blocks[index]["block"]),
-                        title: blocks[index]["block"],
-                      );
+                  child: GestureDetector(
+                    onTap: () {
+                      if (blocks.isEmpty) {
+                        int currentId = textBlockId;
+                        textBlockId++;
+                        FocusNode fNode = FocusNode();
+                        CustomTextFieldController cTextFieldController =
+                            CustomTextFieldController();
+                        blocks.add({
+                          "type": "textBlock",
+                          "controller": cTextFieldController,
+                          "focusNode": fNode,
+                          "id": currentId,
+                          "block": textBlock(
+                            cTextFieldController,
+                            fNode,
+                            widget,
+                            () {
+                              removeTextBlock(currentId);
+                            },
+                          ),
+                        });
+                        focusOnTitle = false;
+                        setState(() {});
+                      }
                     },
-                    onReorder: (oldIndex, newIndex) {
-                      setState(() {
-                        if (newIndex > oldIndex) {
-                          newIndex = newIndex - 1;
-                        }
-                        final item = blocks.removeAt(oldIndex);
-                        blocks.insert(newIndex, item);
-                      });
-                    },
+                    child: ReorderableList(
+                      itemCount: blocks.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          minVerticalPadding: 0,
+                          key: ValueKey(blocks[index]["block"]),
+                          title: blocks[index]["block"],
+                        );
+                      },
+                      onReorder: (oldIndex, newIndex) {
+                        setState(() {
+                          if (newIndex > oldIndex) {
+                            newIndex = newIndex - 1;
+                          }
+                          final item = blocks.removeAt(oldIndex);
+                          blocks.insert(newIndex, item);
+                        });
+                      },
+                    ),
                   ),
                 ),
               ],
