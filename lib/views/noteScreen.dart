@@ -4,6 +4,7 @@ import 'package:notes/components/listBlock.dart';
 import 'package:notes/constants.dart';
 import 'package:notes/controllers/customTextFieldContoller.dart';
 import 'package:notes/controllers/appTheme.dart';
+import 'package:notes/controllers/dataServices.dart';
 import '../components/textBlock.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -316,6 +317,38 @@ class NoteScreenState extends State<NoteScreen> {
               ],
             ),
           ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            List body = [];
+            blocks.forEach((element) {
+              if (element["type"] == "textBlock") {
+                body.add({"textBlock": element["controller"].text});
+              } else if (element["type"] == "listBlock") {
+                List li = [];
+                for (List l in element["list"]) {
+                  li.add({"0": l});
+                }
+                body.add({"listBlock": li});
+              }
+            });
+
+            String title = titleEditingController.text;
+            int creation = DateTime.now().millisecondsSinceEpoch;
+            int updation = DateTime.now().millisecondsSinceEpoch;
+            String path = "/";
+
+            addDoc(widget.user.uid, {
+              "title": title,
+              "body": body,
+              "creation": creation,
+              "updation": updation,
+              "path": path,
+            });
+          },
+          label: const Text("Save"),
+          icon: const Icon(Icons.save),
+          backgroundColor: kCeruleanBlue,
         ),
       ),
     );
