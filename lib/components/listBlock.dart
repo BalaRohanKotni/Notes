@@ -54,6 +54,9 @@ class _ListBlockState extends State<ListBlock> {
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemBuilder: (context, index) {
+        controllers[index].addListener(() {
+          widget.list[index][1] = controllers[index].text;
+        });
         return ListTile(
           minLeadingWidth: -4,
           visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
@@ -94,6 +97,16 @@ class _ListBlockState extends State<ListBlock> {
               focusNode: FocusNode(),
               child: TextField(
                   focusNode: focusNodes[index],
+                  onChanged: (s) {
+                    // int pos = s.indexOf(controllers[index].text);
+                    // print(pos);
+                    // String newS = s.replaceAll(controllers[index].text, "");
+                    // print(newS);
+                    // print(s);
+                    // controllers[index].text = s;
+                    // controllers[index].selection = TextSelection.fromPosition(
+                    //     TextPosition(offset: pos + newS.length));
+                  },
                   onSubmitted: (value) {
                     if (widget.list.isEmpty &&
                         controllers[index].text.isEmpty) {
