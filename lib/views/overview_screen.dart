@@ -230,7 +230,6 @@ class OverviewScreenState extends State<OverviewScreen> {
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
                       var card = CustomCard(
-                          type: data['type'],
                           darkMode: false,
                           onTap: () {},
                           creation: DateTime.fromMillisecondsSinceEpoch(
