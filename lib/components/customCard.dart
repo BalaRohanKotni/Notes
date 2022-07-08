@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:notes/controllers/dataServices.dart';
 
 class CustomCard extends StatelessWidget {
   void Function() onTap;
@@ -8,6 +10,8 @@ class CustomCard extends StatelessWidget {
   String title;
   dynamic body;
   bool darkMode;
+  User user;
+  String docId;
 
   CustomCard({
     Key? key,
@@ -17,32 +21,55 @@ class CustomCard extends StatelessWidget {
     required this.title,
     this.body = "",
     required this.darkMode,
+    required this.user,
+    required this.docId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO
-    // List<Widget> listItemsTextList = [];
-    // List<Widget> doneItems = [];
-    // List<Widget> notDoneItems = [];
-    // if (type == 'list') {
-    //   for (var todo in body.take(2)) {
-    //     if (todo["0"][0] == false) {
-    //       notDoneItems.add(Text(todo['0'][1]));
-    //     } else {
-    //       doneItems.add(Text(
-    //         todo['0'][1],
-    //         style: const TextStyle(decoration: TextDecoration.lineThrough),
-    //       ));
-    //     }
-    //   }
-    //   if (body.length > 2) {
-    //     doneItems.add(const Text(
-    //       "...",
-    //     ));
-    //   }
-    //   listItemsTextList = notDoneItems + doneItems;
-    // }
+    // {listBlock: [{0: [false, "listblock 1"]}, {0: [false, "listblock 2"]}]}
+
+    List<Widget> bodyWidgetList = [];
+    for (int blockIndex = 0; blockIndex < body.length; blockIndex++) {
+      dynamic block = body[blockIndex];
+
+      if (block.containsKey("textBlock")) {
+        bodyWidgetList.add(Text(block["textBlock"]));
+      } else if (block.containsKey("listBlock")) {
+        for (int listBlockItemIndex = 0;
+            listBlockItemIndex < block["listBlock"].length;
+            listBlockItemIndex++) {
+          dynamic listItem = block["listBlock"][listBlockItemIndex];
+          List item = listItem["0"];
+          bool boolValue = item[0];
+          String stringValue = item[1];
+          ListTile listTile = ListTile(
+            minLeadingWidth: -4,
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            contentPadding: const EdgeInsets.only(left: 8),
+            minVerticalPadding: 0,
+            leading: SizedBox(
+              height: 24,
+              width: 24,
+              child: Checkbox(
+                value: boolValue,
+                onChanged: (value) {
+                  body[blockIndex]["listBlock"][listBlockItemIndex]["0"][0] =
+                      value;
+                  updateDoc(
+                    user.uid,
+                    docId,
+                    {"body": body},
+                  );
+                },
+              ),
+            ),
+            title: Text(stringValue),
+          );
+          bodyWidgetList.add(listTile);
+        }
+      }
+    }
 
     return Card(
       child: GestureDetector(
@@ -69,25 +96,14 @@ class CustomCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // TODO
-              // Expanded(
-              //     flex: 4,
-              //     child: (type == 'note')
-              //         ? Text(
-              //             body,
-              //             maxLines: 3,
-              //             overflow: TextOverflow.ellipsis,
-              //             style: const TextStyle(
-              //               fontSize: 14,
-              //               fontWeight: FontWeight.bold,
-              //               fontFamily: "SourceSansPro",
-              //             ),
-              //           )
-              //         : ListView(
-              //             physics: const NeverScrollableScrollPhysics(),
-              //             shrinkWrap: true,
-              //             children: listItemsTextList,
-              //           )),
+              Expanded(
+                flex: 4,
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: bodyWidgetList,
+                ),
+              ),
               Expanded(
                 flex: 2,
                 child: Container(
