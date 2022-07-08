@@ -64,7 +64,10 @@ class CustomCard extends StatelessWidget {
                 },
               ),
             ),
-            title: Text(stringValue),
+            title: Text(
+              stringValue,
+              style: const TextStyle(fontSize: 14),
+            ),
           );
           bodyWidgetList.add(listTile);
         }
