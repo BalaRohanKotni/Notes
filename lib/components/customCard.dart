@@ -4,22 +4,22 @@ import 'package:intl/intl.dart';
 import 'package:notes/controllers/dataServices.dart';
 
 class CustomCard extends StatelessWidget {
-  void Function() onTap;
-  DateTime creation;
-  DateTime updation;
-  String title;
-  dynamic body;
-  bool darkMode;
-  User user;
-  String docId;
+  final void Function() onTap;
+  final DateTime creation;
+  final DateTime updation;
+  final String title;
+  final dynamic body;
+  final bool darkMode;
+  final User user;
+  final String docId;
 
-  CustomCard({
+  const CustomCard({
     Key? key,
     required this.onTap,
     required this.creation,
     required this.updation,
     required this.title,
-    this.body = "",
+    required this.body,
     required this.darkMode,
     required this.user,
     required this.docId,
