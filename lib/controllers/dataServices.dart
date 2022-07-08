@@ -33,7 +33,7 @@ Future<void> addDoc(uid, data) async {
       .add(data);
 }
 
-Future<void> updateDoc(uid, id, dataToChange, type) async {
+Future<void> updateDoc(uid, id, dataToChange) async {
   // nesting objects are also supported: "'a.b.c': 'z'"
   await FirebaseFirestore.instance
       .collection('users')
