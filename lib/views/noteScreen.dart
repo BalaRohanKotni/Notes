@@ -10,8 +10,15 @@ import '../components/textBlock.dart';
 class NoteScreen extends StatefulWidget {
   final User user;
   final ThemeMode themeMode;
-  const NoteScreen({Key? key, required this.user, required this.themeMode})
-      : super(key: key);
+  final bool newNote;
+  final Map data;
+  const NoteScreen({
+    Key? key,
+    required this.user,
+    required this.themeMode,
+    required this.newNote,
+    required this.data,
+  }) : super(key: key);
 
   @override
   State<NoteScreen> createState() => NoteScreenState();
@@ -26,44 +33,143 @@ class NoteScreenState extends State<NoteScreen> {
   FocusNode focusNode = FocusNode();
   List<dynamic> blocks = [];
   bool focusOnTitle = true;
+  int focusOnBlockNumber = 0;
   FocusNode titleFocusNode = FocusNode();
+
+  late String givenTitle;
+  late int givenCreation, givenUpdation;
+  late Map givenBody;
+  late String path;
 
   @override
   void initState() {
     super.initState();
     theme = AppTheme(widget.user.uid);
-    // SystemChannels.textInput.invokeListMethod("TextInput.show");
 
-    int currentId = textBlockId;
-    textBlockId++;
+    if (!widget.newNote) {
+      titleEditingController.text = widget.data["title"];
+      for (dynamic givenBlock in widget.data["body"]) {
+        if (givenBlock.containsKey("textBlock")) {
+          FocusNode fNode = FocusNode();
+          fNode.addListener(() {
+            if (fNode.hasFocus) {}
+          });
+          CustomTextFieldController cTextFieldController =
+              CustomTextFieldController();
+          cTextFieldController.text = givenBlock["textBlock"];
+          int creation = givenBlock["creation"];
+          blocks.add({
+            "type": "textBlock",
+            "controller": cTextFieldController,
+            "focusNode": fNode,
+            "creation": creation,
+            "block": textBlock(
+              cTextFieldController,
+              fNode,
+              widget,
+              () {
+                removeTextBlock(creation);
+              },
+            ),
+          });
+        } else if (givenBlock.containsKey("listBlock")) {
+          FocusNode listBlockFocusNode = FocusNode();
+          List list = [];
+          for (dynamic listItem in givenBlock["listBlock"]) {
+            list.add([listItem["0"][0], listItem["0"][1]]);
+          }
+
+          int creation = givenBlock["creation"];
+          blocks.add({
+            "creation": creation,
+            "type": "listBlock",
+            "focusNode": listBlockFocusNode,
+            "list": list,
+            "block": ListBlock(
+              list: list,
+              themeMode: widget.themeMode,
+              focusNode: listBlockFocusNode,
+              deleteListBlock: () {
+                int index = 0;
+                for (var block in blocks) {
+                  if (block["type"] == "listBlock" &&
+                      block["creation"] == creation) {
+                    blocks.remove(block);
+                    focusOnBlockNumber = index - 1;
+                    setState(() {});
+                    break;
+                  }
+                  index++;
+                }
+              },
+              toggleToNextBlock: () {
+                for (int ind = 0; ind < blocks.length; ind++) {
+                  if (blocks[ind]["type"] == "listBlock" &&
+                      blocks[ind]["creation"] == creation) {
+                    if (ind == blocks.length - 1) {
+                      int textBlockCreation =
+                          DateTime.now().millisecondsSinceEpoch;
+                      focusOnTitle = false;
+                      FocusNode fNode = FocusNode();
+                      CustomTextFieldController cTextFieldController =
+                          CustomTextFieldController();
+                      blocks.add({
+                        "creation": textBlockCreation,
+                        "type": "textBlock",
+                        "controller": cTextFieldController,
+                        "focusNode": fNode,
+                        "block": textBlock(
+                          cTextFieldController,
+                          fNode,
+                          widget,
+                          () {
+                            removeTextBlock(textBlockCreation);
+                          },
+                        ),
+                      });
+                      focusOnBlockNumber = blocks.length - 1;
+                    }
+                    setState(() {});
+                    break;
+                  }
+                }
+              },
+            ),
+          });
+        }
+      }
+    }
+
     FocusNode fNode = FocusNode();
     CustomTextFieldController cTextFieldController =
         CustomTextFieldController();
+    int creation = DateTime.now().millisecondsSinceEpoch;
     blocks.add({
       "type": "textBlock",
       "controller": cTextFieldController,
       "focusNode": fNode,
-      "id": currentId,
+      "creation": creation,
       "block": textBlock(
         cTextFieldController,
         fNode,
         widget,
         () {
-          removeTextBlock(currentId);
+          removeTextBlock(creation);
         },
       ),
     });
-// TODO: Get listBlockId from firestore
-// TODO: Get textBlockId from firestore
   }
 
-  void removeTextBlock(int id) {
+  void removeTextBlock(int creation) {
     int index = 0;
     for (var block in blocks) {
-      if (block["type"] == "textBlock" && block["id"] == id) {
+      if (block["type"] == "textBlock" && block["creation"] == creation) {
         blocks.remove(block);
         if (index == 0) {
           focusOnTitle = true;
+          focusOnBlockNumber = -1;
+        } else {
+          focusOnBlockNumber = index - 1;
         }
         setState(() {});
         break;
@@ -74,10 +180,11 @@ class NoteScreenState extends State<NoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!focusOnTitle && blocks.isNotEmpty) {
-      FocusScope.of(context).requestFocus(blocks.last["focusNode"]);
-    } else if (focusOnTitle && blocks.isEmpty) {
+    if (focusOnBlockNumber == -1) {
       FocusScope.of(context).requestFocus(titleFocusNode);
+    } else {
+      FocusScope.of(context)
+          .requestFocus(blocks[focusOnBlockNumber]["focusNode"]);
     }
     print("building noteScreen.dart");
     return MaterialApp(
@@ -111,10 +218,9 @@ class NoteScreenState extends State<NoteScreen> {
                         FocusNode fNode = FocusNode();
                         CustomTextFieldController cTextFieldController =
                             CustomTextFieldController();
-                        int currentId = textBlockId;
-                        textBlockId++;
+                        int creation = DateTime.now().millisecondsSinceEpoch;
                         blocks.add({
-                          "id": currentId,
+                          "creation": creation,
                           "type": "textBlock",
                           "controller": cTextFieldController,
                           "focusNode": fNode,
@@ -123,7 +229,7 @@ class NoteScreenState extends State<NoteScreen> {
                             fNode,
                             widget,
                             () {
-                              removeTextBlock(currentId);
+                              removeTextBlock(creation);
                             },
                           ),
                         });
@@ -141,9 +247,9 @@ class NoteScreenState extends State<NoteScreen> {
                         List list = [
                           [false, ""]
                         ];
-                        int currentId = listBlockId;
+                        int creation = DateTime.now().millisecondsSinceEpoch;
                         blocks.add({
-                          "id": currentId,
+                          "creation": creation,
                           "type": "listBlock",
                           "focusNode": listBlockFocusNode,
                           "list": list,
@@ -152,29 +258,32 @@ class NoteScreenState extends State<NoteScreen> {
                             themeMode: widget.themeMode,
                             focusNode: listBlockFocusNode,
                             deleteListBlock: () {
+                              int index = 0;
                               for (var block in blocks) {
                                 if (block["type"] == "listBlock" &&
-                                    block["id"] == currentId) {
+                                    block["creation"] == creation) {
                                   blocks.remove(block);
+                                  focusOnBlockNumber = index - 1;
                                   setState(() {});
                                   break;
                                 }
+                                index++;
                               }
                             },
                             toggleToNextBlock: () {
                               for (int ind = 0; ind < blocks.length; ind++) {
                                 if (blocks[ind]["type"] == "listBlock" &&
-                                    blocks[ind]["id"] == currentId) {
+                                    blocks[ind]["creation"] == creation) {
                                   if (ind == blocks.length - 1) {
-                                    int textBlockCurrentId = textBlockId;
-                                    textBlockId++;
+                                    int textBlockCreation =
+                                        DateTime.now().millisecondsSinceEpoch;
                                     focusOnTitle = false;
                                     FocusNode fNode = FocusNode();
                                     CustomTextFieldController
                                         cTextFieldController =
                                         CustomTextFieldController();
                                     blocks.add({
-                                      "id": textBlockCurrentId,
+                                      "creation": textBlockCreation,
                                       "type": "textBlock",
                                       "controller": cTextFieldController,
                                       "focusNode": fNode,
@@ -183,10 +292,11 @@ class NoteScreenState extends State<NoteScreen> {
                                         fNode,
                                         widget,
                                         () {
-                                          removeTextBlock(textBlockCurrentId);
+                                          removeTextBlock(textBlockCreation);
                                         },
                                       ),
                                     });
+                                    focusOnBlockNumber = blocks.length - 1;
                                   }
                                   setState(() {});
                                   break;
@@ -195,7 +305,7 @@ class NoteScreenState extends State<NoteScreen> {
                             },
                           ),
                         });
-                        listBlockId += 1;
+                        focusOnBlockNumber = blocks.length - 1;
                       });
                     },
                     icon: const Icon(
@@ -217,6 +327,7 @@ class NoteScreenState extends State<NoteScreen> {
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
                       focusOnTitle = true;
+                      focusOnBlockNumber = -1;
                     }
                   },
                   child: TextField(
@@ -240,13 +351,12 @@ class NoteScreenState extends State<NoteScreen> {
                     onSubmitted: (text) {
                       setState(() {
                         if (blocks.isEmpty) {
-                          int textBlockCurrentId = textBlockId;
-                          textBlockId++;
+                          int creation = DateTime.now().millisecondsSinceEpoch;
                           FocusNode fNode = FocusNode();
                           CustomTextFieldController cTextFieldController =
                               CustomTextFieldController();
                           blocks.add({
-                            "id": textBlockCurrentId,
+                            "creation": creation,
                             "type": "textBlock",
                             "controller": cTextFieldController,
                             "focusNode": fNode,
@@ -255,12 +365,13 @@ class NoteScreenState extends State<NoteScreen> {
                               fNode,
                               widget,
                               () {
-                                removeTextBlock(textBlockCurrentId);
+                                removeTextBlock(creation);
                               },
                             ),
                           });
                         }
                         focusOnTitle = false;
+                        focusOnBlockNumber = blocks.length - 1;
                       });
                     },
                   ),
@@ -269,8 +380,7 @@ class NoteScreenState extends State<NoteScreen> {
                   child: GestureDetector(
                     onTap: () {
                       if (blocks.isEmpty) {
-                        int currentId = textBlockId;
-                        textBlockId++;
+                        int creation = DateTime.now().millisecondsSinceEpoch;
                         FocusNode fNode = FocusNode();
                         CustomTextFieldController cTextFieldController =
                             CustomTextFieldController();
@@ -278,13 +388,13 @@ class NoteScreenState extends State<NoteScreen> {
                           "type": "textBlock",
                           "controller": cTextFieldController,
                           "focusNode": fNode,
-                          "id": currentId,
+                          "creation": creation,
                           "block": textBlock(
                             cTextFieldController,
                             fNode,
                             widget,
                             () {
-                              removeTextBlock(currentId);
+                              removeTextBlock(creation);
                             },
                           ),
                         });
@@ -321,17 +431,20 @@ class NoteScreenState extends State<NoteScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
             List body = [];
-            blocks.forEach((element) {
+            for (var element in blocks) {
               if (element["type"] == "textBlock") {
-                body.add({"textBlock": element["controller"].text});
+                body.add({
+                  "textBlock": element["controller"].text,
+                  "creation": element["creation"]
+                });
               } else if (element["type"] == "listBlock") {
                 List li = [];
                 for (List l in element["list"]) {
                   li.add({"0": l});
                 }
-                body.add({"listBlock": li});
+                body.add({"listBlock": li, "creation": element["creation"]});
               }
-            });
+            }
 
             String title = titleEditingController.text;
             int creation = DateTime.now().millisecondsSinceEpoch;

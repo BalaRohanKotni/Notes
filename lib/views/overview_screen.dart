@@ -5,13 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:notes/components/overviewScreenNavBar.dart';
 import 'package:notes/controllers/appTheme.dart';
 import 'package:notes/controllers/dataServices.dart';
-import 'package:notes/models/note.dart';
 import 'package:notes/views/noteScreen.dart';
 import '../components/circleButton.dart';
 import '../components/customCard.dart';
 import '../constants.dart';
-
-import '../models/todoList.dart';
 
 class OverviewScreen extends StatefulWidget {
   User user;
@@ -62,10 +59,10 @@ class OverviewScreenState extends State<OverviewScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getThemeFirestore(widget.user.uid),
-      builder: (context, snapshot) {
+      builder: (context, parentSnapshot) {
         return MaterialApp(
           themeMode:
-              (currentTheme(snapshot)) ? ThemeMode.dark : ThemeMode.light,
+              (currentTheme(parentSnapshot)) ? ThemeMode.dark : ThemeMode.light,
           theme: theme.lightTheme,
           darkTheme: theme.darkTheme,
           title: "Notes",
@@ -78,8 +75,10 @@ class OverviewScreenState extends State<OverviewScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => NoteScreen(
+                              newNote: true,
+                              data: const {},
                               user: widget.user,
-                              themeMode: (currentTheme(snapshot))
+                              themeMode: (currentTheme(parentSnapshot))
                                   ? ThemeMode.dark
                                   : ThemeMode.light,
                             )));
@@ -181,7 +180,7 @@ class OverviewScreenState extends State<OverviewScreen> {
                     Row(
                       children: [
                         CircleButton(
-                          iconTD: (currentTheme(snapshot))
+                          iconTD: (currentTheme(parentSnapshot))
                               ? Icons.light_mode
                               : Icons.dark_mode,
                           colorTD: Colors.white,
@@ -216,24 +215,38 @@ class OverviewScreenState extends State<OverviewScreen> {
                 child: StreamBuilder(
                   stream: _stream,
                   builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
+                      AsyncSnapshot<QuerySnapshot> bodySnapshot) {
+                    if (bodySnapshot.hasError) {
                       return Text('Something went wrong');
                     }
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (bodySnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return Text("Loading");
                     }
 
                     List<Widget> list = [];
-                    for (var document in snapshot.data!.docs) {
+                    for (var document in bodySnapshot.data!.docs) {
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
                       var card = CustomCard(
                           docId: document.reference.id,
                           user: widget.user,
                           darkMode: false,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NoteScreen(
+                                          newNote: false,
+                                          data: data,
+                                          user: widget.user,
+                                          themeMode:
+                                              (currentTheme(parentSnapshot))
+                                                  ? ThemeMode.dark
+                                                  : ThemeMode.light,
+                                        )));
+                          },
                           creation: DateTime.fromMillisecondsSinceEpoch(
                               data['updation']),
                           updation: DateTime.fromMillisecondsSinceEpoch(
