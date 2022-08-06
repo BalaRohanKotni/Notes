@@ -177,20 +177,33 @@ class NoteScreenState extends State<NoteScreen> {
               Text((titleEditingController.text.isEmpty)
                   ? "Untitled"
                   : titleEditingController.text),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.list_alt,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      createListBlock();
-                    },
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.list_alt,
+                    size: 30,
                   ),
-                ],
-              ),
+                  onPressed: () {
+                    createListBlock();
+                  },
+                ),
+                PopupMenuButton(
+                  icon: const Icon(Icons.more_vert),
+                  itemBuilder: ((popupMenuButtonContext) => [
+                        PopupMenuItem(
+                          child: const Text("Delete"),
+                          onTap: () {
+                            if (!widget.newNote) {
+                              Navigator.pop(context);
+                              deleteDoc(widget.user.uid, docId);
+                            } else {
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      ]),
+                )
+              ]),
             ],
           ),
         ),
