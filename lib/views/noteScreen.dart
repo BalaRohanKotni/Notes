@@ -304,7 +304,9 @@ class NoteScreenState extends State<NoteScreen> {
             String title = titleEditingController.text;
             int creation = DateTime.now().millisecondsSinceEpoch;
             int updation = DateTime.now().millisecondsSinceEpoch;
-            String path = "/";
+
+            // TODO get path from overview_screen
+            String path = "General";
             if (!widget.newNote) {
               creation = givenCreation;
               path = givenPath;

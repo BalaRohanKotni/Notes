@@ -255,12 +255,8 @@ class OverviewScreenState extends State<OverviewScreen> {
                           title: data['title'],
                           body: data['body']);
 
-                      if (widget.path == "all") {
+                      if (widget.path == data["path"]) {
                         list.add(card);
-                      } else {
-                        if (widget.path == data['type']) {
-                          list.add(card);
-                        }
                       }
                     }
                     return ListView(
