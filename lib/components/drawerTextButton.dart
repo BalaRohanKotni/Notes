@@ -23,11 +23,6 @@ Container drawerTextButton({
             ),
           ),
         ),
-        backgroundColor: MaterialStateProperty.all(
-          (currentPath == path)
-              ? const Color.fromARGB(29, 0, 0, 0)
-              : Colors.white,
-        ),
       ),
       child: Text(text),
       onPressed: () {
