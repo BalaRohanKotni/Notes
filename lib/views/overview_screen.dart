@@ -12,10 +12,8 @@ import '../constants.dart';
 
 class OverviewScreen extends StatefulWidget {
   User user;
-  String type;
-  String tag;
-  OverviewScreen(
-      {Key? key, required this.user, required this.type, this.tag = ""})
+  String path;
+  OverviewScreen({Key? key, required this.user, this.path = ""})
       : super(key: key);
 
   @override
@@ -128,7 +126,7 @@ class OverviewScreenState extends State<OverviewScreen> {
               width: MediaQuery.of(context).size.width / 1.5,
               child: OverViewScreenNavBar(
                 user: widget.user,
-                type: widget.type,
+                path: widget.path,
               ),
               // ),
             ),
@@ -257,10 +255,10 @@ class OverviewScreenState extends State<OverviewScreen> {
                           title: data['title'],
                           body: data['body']);
 
-                      if (widget.type == "all") {
+                      if (widget.path == "all") {
                         list.add(card);
                       } else {
-                        if (widget.type == data['type']) {
+                        if (widget.path == data['type']) {
                           list.add(card);
                         }
                       }

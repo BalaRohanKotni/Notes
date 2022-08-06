@@ -4,12 +4,12 @@ import 'drawerTextButton.dart';
 
 class OverViewScreenNavBar extends StatelessWidget {
   var user;
-  String type;
+  String path;
 
   OverViewScreenNavBar({
     Key? key,
     required this.user,
-    required this.type,
+    required this.path,
   }) : super(key: key);
 
   @override
@@ -35,22 +35,10 @@ class OverViewScreenNavBar extends StatelessWidget {
               ),
               drawerTextButton(
                   context: context,
-                  text: "All",
-                  type: "all",
+                  text: "General",
+                  path: "General",
                   user: user,
-                  currentType: type),
-              drawerTextButton(
-                  context: context,
-                  text: "Notes",
-                  type: "note",
-                  user: user,
-                  currentType: type),
-              drawerTextButton(
-                  context: context,
-                  text: "Lists",
-                  type: "list",
-                  user: user,
-                  currentType: type),
+                  currentPath: path),
             ],
           ),
         ),

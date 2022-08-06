@@ -5,9 +5,9 @@ import '../views/overview_screen.dart';
 Container drawerTextButton({
   required BuildContext context,
   required String text,
-  required String type,
+  required String path,
   required User user,
-  required String currentType,
+  required String currentPath,
 }) {
   return Container(
     margin: const EdgeInsets.only(top: 10, right: 20),
@@ -24,7 +24,7 @@ Container drawerTextButton({
           ),
         ),
         backgroundColor: MaterialStateProperty.all(
-          (currentType == type)
+          (currentPath == path)
               ? const Color.fromARGB(29, 0, 0, 0)
               : Colors.white,
         ),
@@ -36,7 +36,7 @@ Container drawerTextButton({
             MaterialPageRoute(
                 builder: (context) => OverviewScreen(
                       user: user,
-                      type: type,
+                      path: path,
                     )));
       },
     ),

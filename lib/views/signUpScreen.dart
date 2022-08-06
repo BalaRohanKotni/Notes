@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             MaterialPageRoute(
                 builder: (context) => OverviewScreen(
                       user: user,
-                      type: "all",
+                      path: "General",
                     )),
             (route) => false);
       }

@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(
                 builder: (context) => OverviewScreen(
                       user: user,
-                      type: "all",
+                      path: "General",
                     )),
             (route) => false);
       }
