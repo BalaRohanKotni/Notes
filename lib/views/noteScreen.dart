@@ -182,15 +182,6 @@ class NoteScreenState extends State<NoteScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(
-                      Icons.text_fields,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      createTextBlock();
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(
                       Icons.list_alt,
                       size: 30,
                     ),
