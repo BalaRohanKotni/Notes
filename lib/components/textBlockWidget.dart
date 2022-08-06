@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../controllers/customTextFieldContoller.dart';
 
-Widget textBlock(CustomTextFieldController textFieldController,
-    FocusNode focusNode, widget, Function deleteTextBlock) {
+Widget TextBlockWidget(
+  CustomTextFieldController textFieldController,
+  FocusNode focusNode,
+  widget,
+  Function deleteTextBlock,
+) {
   return RawKeyboardListener(
     onKey: (event) {
       if (textFieldController.text.isEmpty &&

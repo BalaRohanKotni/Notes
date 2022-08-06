@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notes/controllers/customTextFieldContoller.dart';
 
-class ListBlock extends StatefulWidget {
+class ListBlockWidget extends StatefulWidget {
   final List list;
   final ThemeMode themeMode;
   final FocusNode focusNode;
   final VoidCallback deleteListBlock;
   final VoidCallback toggleToNextBlock;
-  const ListBlock({
+  const ListBlockWidget({
     Key? key,
     required this.list,
     required this.themeMode,
@@ -18,24 +18,30 @@ class ListBlock extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ListBlock> createState() => _ListBlockState();
+  State<ListBlockWidget> createState() => _ListBlockWidgetState();
 }
 
-class _ListBlockState extends State<ListBlock> {
+class _ListBlockWidgetState extends State<ListBlockWidget> {
   List<CustomTextFieldController> controllers = [];
   List<FocusNode> focusNodes = [];
   late FocusNode _focusNode;
-  // bool __hasFocus = false;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     _focusNode = widget.focusNode;
     _focusNode.addListener(focusChange);
     for (var element in widget.list) {
       controllers.add(CustomTextFieldController());
       controllers.last.text = element[1];
-      focusNodes.add(FocusNode());
+      FocusNode fNode = FocusNode();
+      // fNode.addListener(() {
+      //   if (fNode.hasFocus && !widget.initBuild) {
+      //     widget.hasFocusInBlock();
+      //   }
+      // });
+      focusNodes.add(fNode);
     }
   }
 
@@ -47,7 +53,6 @@ class _ListBlockState extends State<ListBlock> {
 
   @override
   Widget build(BuildContext context) {
-    print("building listBlock.dart");
     focusChange();
     return ReorderableList(
       physics: const NeverScrollableScrollPhysics(),
@@ -116,7 +121,11 @@ class _ListBlockState extends State<ListBlock> {
                       widget.list.removeAt(widget.list.length - 1);
                       controllers.removeAt(controllers.length - 1);
                       focusNodes.removeAt(focusNodes.length - 1);
-                      widget.toggleToNextBlock();
+                      if (controllers.isNotEmpty) {
+                        widget.toggleToNextBlock();
+                      } else {
+                        widget.deleteListBlock();
+                      }
                       setState(() {});
                     } else {
                       setState(() {
