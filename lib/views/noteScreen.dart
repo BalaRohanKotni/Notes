@@ -26,7 +26,8 @@ class NoteScreen extends StatefulWidget {
 
 class NoteScreenState extends State<NoteScreen> {
   late AppTheme theme;
-  late String docId;
+  late String docId, givenPath;
+  late int givenCreation, givenUpdation;
 
   TextEditingController titleEditingController = TextEditingController();
   FocusNode titleFocusNode = FocusNode();
@@ -126,6 +127,9 @@ class NoteScreenState extends State<NoteScreen> {
 
     if (!widget.newNote) {
       Map data = widget.data["data"];
+      givenCreation = data["creation"];
+      givenUpdation = data["updation"];
+      givenPath = data["path"];
       print(data);
       docId = widget.data["id"];
       titleEditingController.text = data["title"];
@@ -301,23 +305,23 @@ class NoteScreenState extends State<NoteScreen> {
             int creation = DateTime.now().millisecondsSinceEpoch;
             int updation = DateTime.now().millisecondsSinceEpoch;
             String path = "/";
+            if (!widget.newNote) {
+              creation = givenCreation;
+              path = givenPath;
+            }
+
+            dynamic doc = {
+              "title": title,
+              "body": body,
+              "creation": creation,
+              "updation": updation,
+              "path": path,
+            };
 
             if (widget.newNote) {
-              addDoc(widget.user.uid, {
-                "title": title,
-                "body": body,
-                "creation": creation,
-                "updation": updation,
-                "path": path,
-              });
+              addDoc(widget.user.uid, doc);
             } else {
-              updateDoc(widget.user.uid, docId, {
-                "title": title,
-                "body": body,
-                "creation": creation,
-                "updation": updation,
-                "path": path,
-              });
+              updateDoc(widget.user.uid, docId, doc);
             }
             Navigator.pop(context);
           },
