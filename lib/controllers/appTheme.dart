@@ -69,6 +69,7 @@ class AppTheme with ChangeNotifier {
               const Color.fromARGB(64, 255, 255, 255)),
         ),
       ),
+      cardColor: kDarkModeBG,
     );
   }
 }
