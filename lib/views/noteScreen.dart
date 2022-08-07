@@ -151,14 +151,31 @@ class NoteScreenState extends State<NoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(focusOnBlockNumber);
+    // go throught blocks to get index of two same type blocks if they are consecutive
+    List consecutiveTextBlocksIndex = [];
+    for (int index = 0; index < blocks.length; index++) {
+      if (index != blocks.length - 1 &&
+          blocks[index]["type"] == blocks[index + 1]["type"]) {
+        if (blocks[index]["type"] == "textBlock") {
+          consecutiveTextBlocksIndex.add(index + 1);
+        }
+      }
+    }
+    // combine two consecutive textblocks
+    for (int index in consecutiveTextBlocksIndex) {
+      blocks[index - 1]["controller"].text +=
+          "\n" + blocks[index]["controller"].text;
+      blocks.removeAt(index);
+    }
+
     if (focusOnBlockNumber < 0) {
-      print("title");
       FocusScope.of(context).requestFocus(titleFocusNode);
     } else {
       FocusScope.of(context)
           .requestFocus(blocks[focusOnBlockNumber]["focusNode"]);
     }
+
+    print(consecutiveTextBlocksIndex);
     print("building noteScreen.dart");
     return MaterialApp(
       themeMode: widget.themeMode,
