@@ -81,6 +81,7 @@ class NoteScreenState extends State<NoteScreen> {
 
   createListBlock({
     int creation = -1,
+    int atIndex = -1,
     List list = const [],
   }) {
     if (creation == -1) {
@@ -90,7 +91,7 @@ class NoteScreenState extends State<NoteScreen> {
     }
     if (creation == -1) creation = DateTime.now().millisecondsSinceEpoch;
     FocusNode focusNode = FocusNode();
-    blocks.add({
+    Map blockData = {
       "creation": creation,
       "type": "listBlock",
       "focusNode": focusNode,
@@ -115,7 +116,13 @@ class NoteScreenState extends State<NoteScreen> {
           }
         },
       ),
-    });
+    };
+
+    if (atIndex == -1) {
+      blocks.add(blockData);
+    } else {
+      blocks.insert(atIndex, blockData);
+    }
     focusOnBlockNumber = findBlockIndex(creation);
     setState(() {});
   }
@@ -153,11 +160,14 @@ class NoteScreenState extends State<NoteScreen> {
   Widget build(BuildContext context) {
     // go throught blocks to get index of two same type blocks if they are consecutive
     List consecutiveTextBlocksIndex = [];
+    List consecutiveListBlocksIndex = [];
     for (int index = 0; index < blocks.length; index++) {
       if (index != blocks.length - 1 &&
           blocks[index]["type"] == blocks[index + 1]["type"]) {
         if (blocks[index]["type"] == "textBlock") {
           consecutiveTextBlocksIndex.add(index + 1);
+        } else if (blocks[index]["type"] == "listBlock") {
+          consecutiveListBlocksIndex.add(index + 1);
         }
       }
     }
@@ -168,6 +178,19 @@ class NoteScreenState extends State<NoteScreen> {
       blocks.removeAt(index);
     }
 
+    // combine two consecutive listBlocks
+    for (int index in consecutiveListBlocksIndex) {
+      for (dynamic todo in blocks[index]["list"]) {
+        blocks[index - 1]["list"].add(todo);
+      }
+      List updatedList = blocks[index - 1]["list"];
+      int creation = blocks[index - 1]["creation"];
+      blocks.removeAt(index);
+      blocks.removeAt(index - 1);
+      createListBlock(
+          creation: creation, list: updatedList, atIndex: index - 1);
+    }
+
     if (focusOnBlockNumber < 0) {
       FocusScope.of(context).requestFocus(titleFocusNode);
     } else {
@@ -175,7 +198,6 @@ class NoteScreenState extends State<NoteScreen> {
           .requestFocus(blocks[focusOnBlockNumber]["focusNode"]);
     }
 
-    print(consecutiveTextBlocksIndex);
     print("building noteScreen.dart");
     return MaterialApp(
       themeMode: widget.themeMode,
